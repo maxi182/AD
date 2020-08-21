@@ -1,0 +1,51 @@
+package Config
+
+import (
+	"fmt"
+
+	"github.com/jinzhu/gorm"
+)
+
+var DB *gorm.DB
+
+// DBConfig represents db configuration
+type DBConfig struct {
+	Host     string
+	Port     int
+	User     string
+	DBName   string
+	Password string
+}
+
+func BuildDBConfig() *DBConfig {
+	dbConfig := DBConfig{
+		Host:     "localhost",
+		Port:     3306,
+		User:     "root",
+		Password: "123456",
+		DBName:   "testdb",
+	}
+	return &dbConfig
+}
+
+// func BuildDBConfig() *DBConfig {
+// 	dbConfig := DBConfig{
+// 		Host:     "https://ar-caba-sv1.seconline.net.ar",
+// 		Port:     3306,
+// 		User:     "cerfogli_distri",
+// 		Password: "uade12345",
+// 		DBName:   "cerfogli_uade",
+// 	}
+// 	return &dbConfig
+// }
+
+func DbURL(dbConfig *DBConfig) string {
+	return fmt.Sprintf(
+		"%s:%s@tcp(%s:%d)/%s?charset=utf8&parseTime=True&loc=Local",
+		dbConfig.User,
+		dbConfig.Password,
+		dbConfig.Host,
+		dbConfig.Port,
+		dbConfig.DBName,
+	)
+}
