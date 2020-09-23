@@ -17,31 +17,31 @@ type DBConfig struct {
 	Password string
 }
 
-func BuildDBConfig() *DBConfig {
-	dbConfig := DBConfig{
-		Host:     "localhost",
-		Port:     3306,
-		User:     "root",
-		Password: "123456",
-		DBName:   "testdb",
-	}
-	return &dbConfig
-}
-
-// func BuildDBConfig() *DBConfig {
-// 	dbConfig := DBConfig{
-// 		Host:     "https://ar-caba-sv1.seconline.net.ar",
-// 		Port:     3306,
-// 		User:     "cerfogli_distri",
-// 		Password: "uade12345",
-// 		DBName:   "cerfogli_uade",
+//   func BuildDBConfig() *DBConfig {
+//   	dbConfig := DBConfig{
+// 		Host:     "localhost",
+//   		Port:     3306,
+//   		User:     "root",
+//         Password: "123456",
+//  		DBName:   "testdb",
 // 	}
-// 	return &dbConfig
-// }
+//  	return &dbConfig
+//  }
+
+ func BuildDBConfig() *DBConfig {
+ 	dbConfig := DBConfig{
+		Host:     "190.55.95.131",
+		Port:     3306,
+ 		User:     "tpuser",
+ 		Password: "Uade$12345",
+ 		DBName:   "tpdb",
+ 	}
+ 	return &dbConfig
+ }
 
 func DbURL(dbConfig *DBConfig) string {
 	return fmt.Sprintf(
-		"%s:%s@tcp(%s:%d)/%s?charset=utf8&parseTime=True&loc=Local",
+		"%s:%s@tcp(%s:%d)/%s?charset=utf8&parseTime=True",
 		dbConfig.User,
 		dbConfig.Password,
 		dbConfig.Host,

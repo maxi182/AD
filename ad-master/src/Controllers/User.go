@@ -13,23 +13,29 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-const password_expiration_lapse = 7776000 //3 months
-
 //GetUsers ... Get all users
 func GetUsers(c *gin.Context) {
 	var user []Models.User
 	var u Models.User
 	err := Models.GetAllUsers(&user)
 	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"error" : gin.H { 
+			"status":  http.StatusNotFound,
+			"message": err.Error(),
+		}})
 		c.AbortWithStatus(http.StatusNotFound)
 	} else {
 		log.Println("====== Bind By Query String ======")
 		log.Println(u.Nombre)
- 
+		//var rubro []Models.RubroUsuario
+	 
+
 		fmt.Println(c.Request.URL.Query())
 		page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
-		limit, _ := strconv.Atoi(c.DefaultQuery("limit", "3"))
+		limit, _ := strconv.Atoi(c.DefaultQuery("limit", "50"))
 	
+
 		paginator := pagination.Paging(&pagination.Param{
 			DB:      Config.DB,
 			Page:    page,
@@ -37,27 +43,69 @@ func GetUsers(c *gin.Context) {
 			OrderBy: []string{"id"},
 			ShowSQL: true,
 		}, &user)
+
+		// for i := 0; i < len(user); i++ {
+
+		// 	err :=Models.GetRubroByUserID(&rubro, string(user[i].Id))
+		// 	if err == nil {
+		// 		user[i].Rubros = rubro
+		// 		user[i].Nombre = "PEPE "+ string(i)
+		// 	}
+		// }
+ 		
 		c.JSON(200, paginator)
 
-	//	c.JSON(http.StatusOK, gin.H{"data": user})
 	}
 }
-
 
 //CreateUser ... Create User
 func CreateUser(c *gin.Context) {
 	var user Models.User
 	c.BindJSON(&user)
+	var rubro []Models.RubroUsuario
+	rubro = user.Rubros
+
+// 	if(rubro !=nil && len(rubro)>0) {
+// 	fmt.Println(rubro[1].Id) //Trae el ID del rubro en pos1
+// 	rubro[0].Id_rubro = rubro[0].Id
+// 	rubro[0].Id_usuario = user.Id
+// 	err1 := Models.CreateRubroUsuario(&rubro[0])
+
+// 	if err1 != nil {
+// 		c.JSON(http.StatusNotFound, gin.H{
+// 			"error" : gin.H { 
+// 			"status":  400,
+// 			"message": err1.Error(),
+// 		}})
+// 		fmt.Println(err1.Error())
+// 		c.AbortWithStatus(http.StatusNotFound)
+// 	} else {
+// 		c.JSON(http.StatusOK, user)
+// 	}
+//  }
+	
 	var now = time.Now().Unix()
 	user.Password = Utils.EncodeBase64(user.Password)
     user.Date_created = Utils.ConvertTimestampToDate(int64(now))
-	user.Password_expires = Utils.ConvertTimestampToDate(int64(now + password_expiration_lapse))
 	err := Models.CreateUser(&user)
 	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"error" : gin.H { 
+			"status":  400,
+			"message": err.Error(),
+		}})
 		fmt.Println(err.Error())
 		c.AbortWithStatus(http.StatusNotFound)
 	} else {
 		c.JSON(http.StatusOK, user)
+		fmt.Println("usuario_creado", user.Id)
+ 
+			if(rubro !=nil && len(rubro)>0) {
+				for i := 0; i < len(rubro); i++ {
+					rubro[i].Id_usuario = user.Id
+					Models.CreateRubroUsuario(&rubro[i])
+				}
+		}
 	}
 }
 
@@ -67,6 +115,11 @@ func GetUserByID(c *gin.Context) {
 	var user Models.User
 	err := Models.GetUserByID(&user, id)
 	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"error" : gin.H { 
+			"status":  http.StatusNotFound,
+			"message": err.Error(),
+		}})
 		c.AbortWithStatus(http.StatusNotFound)
 	} else {
 		c.JSON(http.StatusOK, user)
@@ -78,12 +131,15 @@ func UpdateUser(c *gin.Context) {
 	var user Models.User
 	id := c.Params.ByName("id")
 	fmt.Println("id", id)
-
-
 	err := Models.GetUserByID(&user, id)
 	if err != nil {
-		c.JSON(http.StatusNotFound, user)
-	}
+		c.JSON(http.StatusNotFound,  gin.H{
+			"error" : gin.H { 
+			"status":  http.StatusNotFound,
+			"message": "Not Found",
+		}})
+		return
+	} else {
 	c.BindJSON(&user)
 	err = Models.UpdateUser(&user, id)
 	if err != nil {
@@ -91,6 +147,7 @@ func UpdateUser(c *gin.Context) {
 	} else {
 		c.JSON(http.StatusOK, user)
 	}
+}
 }
 
 //DeleteUser ... Delete the user
@@ -116,6 +173,7 @@ func LoginUser(c *gin.Context) {
 	 fmt.Println("firstname", firstname)
 	 fmt.Println("lastname", lastname)
 
+ 
 	 	if err := c.ShouldBindJSON(&user); err != nil {
  		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	 		return
@@ -126,7 +184,11 @@ func LoginUser(c *gin.Context) {
 	 if err != nil {
 		 c.AbortWithStatus(http.StatusNotFound)
 		 fmt.Println("Not found")
-		 c.JSON(http.StatusUnauthorized, gin.H{"status": "unauthorized"})
+		 c.JSON(http.StatusUnauthorized, gin.H{
+			"error" : gin.H { 
+			"status":  http.StatusUnauthorized,
+			"message": "Unathorized",
+		}})
 		 return
 	 } else {
 		fmt.Println("User Found")

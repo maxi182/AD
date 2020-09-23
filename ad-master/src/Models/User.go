@@ -3,13 +3,20 @@ package Models
 import (
 	"first-api/Config"
 	"fmt"
-
+ 
 	_ "github.com/go-sql-driver/mysql"
 	//http://gorm.io/es_ES/docs/query.html
 )
-
+ 
 //GetAllUsers Fetch all user data
 func GetAllUsers(user *[]User) (err error) {
+			
+ 
+	// if err = Config.DB.Model(&User{}).Select("*").Joins("join RubroUsuario on RubroUsuario.id_usuario = Usuarios.Id").Find(&User{}).Error; err != nil {
+
+	// 	return err
+	// }
+	// return nil
 	if err = Config.DB.Find(user).Error; err != nil {
 		return err
 	}

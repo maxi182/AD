@@ -6,14 +6,16 @@ import (
 	"first-api/Routes"
 	"fmt"
 
+
 	"github.com/jinzhu/gorm"
 )
+
+//https://blog.logrocket.com/how-to-build-a-rest-api-with-golang-using-gin-and-gorm/
 
 var err error
 
 func main() {
 	 Config.DB, err = gorm.Open("mysql", Config.DbURL(Config.BuildDBConfig()))
-	//Config.DB, err = gorm.Open("mysql", "cerfogli_distri:uade12345@ar-caba-sv1.seconline.net.ar/cerfogli_uade?charset=utf8&parseTime=True&loc=Local")
 
 	if err != nil {
 		fmt.Println("Status:", err)
@@ -24,6 +26,7 @@ func main() {
 	Config.DB.LogMode(true)
 
 	r := Routes.SetupRouter()
+
 	//running
-	r.Run()
+	r.Run()	
 }
