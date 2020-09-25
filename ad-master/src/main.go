@@ -25,8 +25,12 @@ func main() {
 	Config.DB.AutoMigrate(&Models.User{})
 	Config.DB.LogMode(true)
 
+	//Config.DB.DropTableIfExists(&Models.User{})
+	Config.DB.CreateTable(&Models.Propiedad{})
+	Config.DB.CreateTable(&Models.Unidad{})
+	//Models.NewPropiedad(1,"Av Libertador 5000","Edificio Libertador A","CABA", "Buenos Aires", -34.563957,-58.4383696)
+ 
 	r := Routes.SetupRouter()
-
 	//running
 	r.Run()	
 }

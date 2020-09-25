@@ -12,8 +12,7 @@ type User struct {
 	Image      string          `json:"image"`
 	Fechanac   string          `json:"fechanac"`
 	Dni        string          `json:"dni"`
-	//Rubros     []RubroUsuario  `gorm:"ForeignKey:Id_usuario" json:"rubros"`
-	Rubros []RubroUsuario        `gorm:"many2many:RubroUsuario;foreignKey:Id_usuario" json:"rubros"`
+	Rubros []RubroUsuario      `gorm:"many2many:RubroUsuario;foreignKey:Id" binding:"required" json:"rubros"`
  
 	Date_created string        `json:"date_created"`
 	Password     string        `json:"password"`
