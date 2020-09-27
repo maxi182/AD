@@ -12,6 +12,10 @@ import (
 
 //https://blog.logrocket.com/how-to-build-a-rest-api-with-golang-using-gin-and-gorm/
 
+//https://www.soberkoder.com/go-rest-api-mysql-gorm/
+//https://stackoverflow.com/questions/34667199/gorm-many-to-many-select-gives-invalid-association-error
+//https://github.com/jinzhu/gorm/blob/021d7b33143de37b743d1cf660974e9c8d3f80ea/multi_primary_keys_test.go
+
 var err error
 
 func main() {
@@ -28,6 +32,9 @@ func main() {
 	//Config.DB.DropTableIfExists(&Models.User{})
 	Config.DB.CreateTable(&Models.Propiedad{})
 	Config.DB.CreateTable(&Models.Unidad{})
+	Config.DB.CreateTable(&Models.User{})
+	Config.DB.CreateTable(&Models.Rubro{})
+
 	//Models.NewPropiedad(1,"Av Libertador 5000","Edificio Libertador A","CABA", "Buenos Aires", -34.563957,-58.4383696)
  
 	r := Routes.SetupRouter()

@@ -1,10 +1,14 @@
 package Models
+
 import (
-	"github.com/jinzhu/gorm"
+	 "time"
 )
+ 
 type User struct {
-	gorm.Model
 	Id         uint            `gorm:"primary_key"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt *time.Time        `sql:"index"`
 	Usertype   uint            `json:"usertype"`
 	Nombre     string          `json:"nombre"`
 	Apellido   string          `json:"apellido"`
@@ -12,8 +16,9 @@ type User struct {
 	Image      string          `json:"image"`
 	Fechanac   string          `json:"fechanac"`
 	Dni        string          `json:"dni"`
-	Rubros []RubroUsuario      `gorm:"many2many:RubroUsuario;foreignKey:Id" binding:"required" json:"rubros"`
+	Rubros []Rubro             `gorm:"many2many:RubroUsuario;ForeignKey:id;AssociationForeignKey:id" json:"rubros"`
  
+
 	Date_created string        `json:"date_created"`
 	Password     string        `json:"password"`
 	Is_active bool             `json:"is_active"`
@@ -23,3 +28,4 @@ type User struct {
 func (b *User) TableName() string {
 	return "Usuarios"
 }
+

@@ -1,15 +1,15 @@
 package Controllers
 
 import (
-	"first-api/Config"
-	"strconv"
+ 	"first-api/Config"
+ 	"strconv"
 	"first-api/Models"
 	"first-api/Utils"
 	"fmt"
 	"log"
 	"time"
 	"net/http" //https://golang.org/pkg/net/http/
-	"github.com/biezhi/gorm-paginator/pagination"
+ 	"github.com/biezhi/gorm-paginator/pagination"
 	"github.com/gin-gonic/gin"
 )
 
@@ -43,15 +43,7 @@ func GetUsers(c *gin.Context) {
 			OrderBy: []string{"id"},
 			ShowSQL: true,
 		}, &user)
-
-		// for i := 0; i < len(user); i++ {
-
-		// 	err :=Models.GetRubroByUserID(&rubro, string(user[i].Id))
-		// 	if err == nil {
-		// 		user[i].Rubros = rubro
-		// 		user[i].Nombre = "PEPE "+ string(i)
-		// 	}
-		// }
+ 
  		
 		c.JSON(200, paginator)
 
@@ -62,8 +54,8 @@ func GetUsers(c *gin.Context) {
 func CreateUser(c *gin.Context) {
 	var user Models.User
 	c.BindJSON(&user)
-	var rubro []Models.RubroUsuario
-	rubro = user.Rubros
+	//var rubro []Models.Rubro
+	//rubro = user.Rubros
 
 // 	if(rubro !=nil && len(rubro)>0) {
 // 	fmt.Println(rubro[1].Id) //Trae el ID del rubro en pos1
@@ -100,12 +92,12 @@ func CreateUser(c *gin.Context) {
 		c.JSON(http.StatusOK, user)
 		fmt.Println("usuario_creado", user.Id)
  
-			if(rubro !=nil && len(rubro)>0) {
-				for i := 0; i < len(rubro); i++ {
-					rubro[i].Id_usuario = user.Id
-					Models.CreateRubroUsuario(&rubro[i])
-				}
-		}
+		// 	if(rubro !=nil && len(rubro)>0) {
+		// 		for i := 0; i < len(rubro); i++ {
+		// 			rubro[i].Id_usuario = user.Id
+		// 			Models.CreateRubro(&rubro[i])
+		// 		}
+		// }
 	}
 }
 

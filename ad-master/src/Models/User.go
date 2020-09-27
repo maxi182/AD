@@ -17,7 +17,8 @@ func GetAllUsers(user *[]User) (err error) {
 	// 	return err
 	// }
 	// return nil
-	if err = Config.DB.Find(user).Error; err != nil {
+	
+	if err = Config.DB.Preload("Rubros").Find(&user).Error; err != nil {
 		return err
 	}
 	return nil
