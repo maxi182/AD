@@ -30,21 +30,18 @@ func GetUsers(c *gin.Context) {
 		log.Println(u.Nombre)
 		//var rubro []Models.RubroUsuario
 	 
-
 		fmt.Println(c.Request.URL.Query())
-		page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
-		limit, _ := strconv.Atoi(c.DefaultQuery("limit", "50"))
+		 page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
+		 limit, _ := strconv.Atoi(c.DefaultQuery("limit", "50"))
 	
-
-		paginator := pagination.Paging(&pagination.Param{
-			DB:      Config.DB,
+		  paginator := pagination.Paging(&pagination.Param{
+			DB:      Config.DB.Preload("Rubros"),
 			Page:    page,
 			Limit:   limit,
 			OrderBy: []string{"id"},
 			ShowSQL: true,
-		}, &user)
+		},  &user)
  
- 		
 		c.JSON(200, paginator)
 
 	}

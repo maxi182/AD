@@ -15,7 +15,7 @@ import (
 //https://www.soberkoder.com/go-rest-api-mysql-gorm/
 //https://stackoverflow.com/questions/34667199/gorm-many-to-many-select-gives-invalid-association-error
 //https://github.com/jinzhu/gorm/blob/021d7b33143de37b743d1cf660974e9c8d3f80ea/multi_primary_keys_test.go
-
+//https://medium.com/remotepanda-blog/go-with-gorm-chapter-10-golang-91bc5d01c161
 var err error
 
 func main() {
@@ -27,6 +27,7 @@ func main() {
 
 	defer Config.DB.Close()
 	Config.DB.AutoMigrate(&Models.User{})
+	Config.DB.AutoMigrate(&Models.Rubro{})
 	Config.DB.LogMode(true)
 
 	//Config.DB.DropTableIfExists(&Models.User{})

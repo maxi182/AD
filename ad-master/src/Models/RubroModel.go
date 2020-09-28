@@ -1,15 +1,11 @@
 package Models
 
 
-import (
-	"github.com/jinzhu/gorm"
-)
- 
 type Rubro struct {
-	gorm.Model
-	//Id      uint   `gorm:"primary_key"`
-	Descripcion string   `json:"descripcion"`
-//	Id_usuario uint   `json:"id_usuario"`
+ 
+	Id      uint   `json:"rubro_id"`
+	Descripcion string   `gorm:"not null" json:"descripcion"`
+ 
 }
 
 func (b *Rubro) TableName() string {

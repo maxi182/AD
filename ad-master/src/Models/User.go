@@ -25,8 +25,12 @@ func GetAllUsers(user *[]User) (err error) {
 }
 
 //CreateUser ... Insert New data
-func CreateUser(user *User) (err error) {
-	if err = Config.DB.Create(user).Error; err != nil {
+func CreateUser(user *User) (err error) {  //Omit("Rubros") 
+
+   if err = Config.DB.Omit("Rubros").Create(user).Error; err != nil {
+	   return err
+   }
+   if err =  Config.DB.Model(user).Association("Rubros").Replace(user.Rubros).Error; err != nil {
 		return err
 	}
 	return nil
