@@ -3,8 +3,8 @@ package Models
 
 type Rubro struct {
  
-	Id      uint   `json:"rubro_id"`
-	Descripcion string   `gorm:"not null" json:"descripcion"`
+	Id      uint   `gorm:"primary_key" json:"rubro_id"`
+	Descripcion string  `json:"descripcion"`
  
 }
 

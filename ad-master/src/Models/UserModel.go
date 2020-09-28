@@ -17,7 +17,7 @@ type User struct {
 	Fechanac       string          `json:"fechanac"`
 	Dni            string          `json:"dni"`
 	Rubros         []Rubro         `gorm:"many2many:RubroUsuario"  json:"rubros"`
-	//Unidades       []Unidad        `gorm:"many2many:UnidadUsuario" json:"unidades"`
+	Unidades       []Unidad        `gorm:"many2many:UnidadUsuario" json:"unidades"`
 	Date_created   string          `json:"date_created"`
 	Password       string          `json:"password"`
 	Is_active      bool            `json:"is_active"`

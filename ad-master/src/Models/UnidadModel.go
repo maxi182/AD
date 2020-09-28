@@ -2,7 +2,7 @@ package Models
 
 
 type Unidad struct {
-	Id            uint     `gorm:"primary_key;auto_increment" json:"id"` 
+	Id            uint     `json:"id"` 
 	Id_propiedad  uint     `json:"id_propiedad"`
 	Piso          uint     `json:"piso"`
 	Depto         string   `json:"dpto"`
