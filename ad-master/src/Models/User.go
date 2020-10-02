@@ -3,7 +3,7 @@ package Models
 import (
 	"first-api/Config"
 	"fmt"
- 
+	
 	_ "github.com/go-sql-driver/mysql"
 	//http://gorm.io/es_ES/docs/query.html
 )
@@ -27,6 +27,7 @@ func GetAllUsers(user *[]User) (err error) {
 //CreateUser ... Insert New data
 func CreateUser(user *User) (err error) {  //Omit("Rubros") 
 
+
      if err = Config.DB.Omit("Rubros", "Unidades").Create(user).Error; err != nil {
 	   return err
      }
@@ -40,6 +41,7 @@ func CreateUser(user *User) (err error) {  //Omit("Rubros")
 	return nil
 }
 
+ 
 //GetUserByID ... Fetch only one user by Id
 func GetUserByID(user *User, id string) (err error) {
 	if err = Config.DB.Where("id = ?", id).Find(user).Error; err != nil {
@@ -62,8 +64,8 @@ func DeleteUser(user *User, id string) (err error) {
 }
 
 //LoginUser
-func LoginUser(user *User, email string, password string) (err error) {
-	if err = Config.DB.Where("email = ? AND password = ?", email, password).Find(user).Error; err != nil {
+func LoginUser(user *User, email string) (err error) {
+	if err = Config.DB.Where("email = ?", email).Find(user).Error; err != nil {
 		return err
 	}
 
@@ -74,5 +76,12 @@ func LoginUser(user *User, email string, password string) (err error) {
 func UpdateUserById(user *User, id string) (err error) {
 	fmt.Println(user)
 	Config.DB.Where("id = ?", id).Save(&user)
+	return nil
+}
+
+func UpdateUserByEmail(user *User, email string, psw string) (err error) {
+	if err = Config.DB.Model(user).Where("email = ?", email).Find(user).Update("password", psw).Error; err != nil {
+		return err
+	}
 	return nil
 }

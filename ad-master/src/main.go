@@ -6,7 +6,7 @@ import (
 	"first-api/Routes"
 	"fmt"
 
-
+	"github.com/qor/validations"
 	"github.com/jinzhu/gorm"
 )
 
@@ -26,6 +26,7 @@ func main() {
 	}
 
 	defer Config.DB.Close()
+	validations.RegisterCallbacks(Config.DB)
 	Config.DB.AutoMigrate(&Models.User{})
 	Config.DB.AutoMigrate(&Models.Rubro{})
 	Config.DB.LogMode(true)

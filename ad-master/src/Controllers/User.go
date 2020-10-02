@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"log"
 	"time"
+	"gopkg.in/validator.v2"
 	"net/http" //https://golang.org/pkg/net/http/
  	"github.com/biezhi/gorm-paginator/pagination"
 	"github.com/gin-gonic/gin"
@@ -35,7 +36,7 @@ func GetUsers(c *gin.Context) {
 		 limit, _ := strconv.Atoi(c.DefaultQuery("limit", "50"))
 	
 		  paginator := pagination.Paging(&pagination.Param{
-			DB:      Config.DB.Preload("Rubros"),
+			DB:      Config.DB.Preload("Rubros").Preload("Unidades"),
 			Page:    page,
 			Limit:   limit,
 			OrderBy: []string{"id"},
@@ -53,28 +54,23 @@ func CreateUser(c *gin.Context) {
 	c.BindJSON(&user)
 	//var rubro []Models.Rubro
 	//rubro = user.Rubros
-
-// 	if(rubro !=nil && len(rubro)>0) {
-// 	fmt.Println(rubro[1].Id) //Trae el ID del rubro en pos1
-// 	rubro[0].Id_rubro = rubro[0].Id
-// 	rubro[0].Id_usuario = user.Id
-// 	err1 := Models.CreateRubroUsuario(&rubro[0])
-
-// 	if err1 != nil {
-// 		c.JSON(http.StatusNotFound, gin.H{
-// 			"error" : gin.H { 
-// 			"status":  400,
-// 			"message": err1.Error(),
-// 		}})
-// 		fmt.Println(err1.Error())
-// 		c.AbortWithStatus(http.StatusNotFound)
-// 	} else {
-// 		c.JSON(http.StatusOK, user)
-// 	}
-//  }
 	
 	var now = time.Now().Unix()
-	user.Password = Utils.EncodeBase64(user.Password)
+
+	nur := Models.User(user)
+	 err_password := validator.Validate(nur)
+	 if err_password != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"error" : gin.H { 
+			"status":  400,
+			"message": err_password.Error(),
+		}})
+		fmt.Println(err_password.Error())
+		c.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
+	//user.Password = Utils.EncodeBase64(user.Password)
     user.Date_created = Utils.ConvertTimestampToDate(int64(now))
 	err := Models.CreateUser(&user)
 	if err != nil {
@@ -130,9 +126,16 @@ func UpdateUser(c *gin.Context) {
 		return
 	} else {
 	c.BindJSON(&user)
+	
 	err = Models.UpdateUser(&user, id)
 	if err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
+		c.JSON(http.StatusNotFound,  gin.H{
+			"data":gin.H { 
+			"error" : gin.H { 
+			"status":  http.StatusBadRequest,
+			"message": "Can´t update user",
+		}}})
 	} else {
 		c.JSON(http.StatusOK, user)
 	}
@@ -146,8 +149,8 @@ func DeleteUser(c *gin.Context) {
 	err := Models.DeleteUser(&user, id)
 	if err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
-	} else {
-		c.JSON(http.StatusOK, gin.H{"id" + id: "is deleted"})
+	} else { 
+		c.JSON(http.StatusOK, gin.H{"id":"is deleted"})
 	}
 }
 
@@ -157,36 +160,69 @@ func LoginUser(c *gin.Context) {
 	var dbuser Models.User
 	 uid := c.Params.ByName("name")
 	 fmt.Println("name", uid)
-	 firstname := c.Query("firstname")
-	 lastname := c.Query("lastname") 
-	 fmt.Println("firstname", firstname)
-	 fmt.Println("lastname", lastname)
 
- 
 	 	if err := c.ShouldBindJSON(&user); err != nil {
  		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	 		return
 	 }
 	 fmt.Println(user.Email)
 
-	 err := Models.LoginUser(&dbuser, user.Email, Utils.EncodeBase64(user.Password))
+	 err := Models.LoginUser(&dbuser, user.Email)
 	 if err != nil {
 		 c.AbortWithStatus(http.StatusNotFound)
 		 fmt.Println("Not found")
-		 c.JSON(http.StatusUnauthorized, gin.H{
+		 c.JSON(http.StatusNotFound,  gin.H{
 			"error" : gin.H { 
-			"status":  http.StatusUnauthorized,
-			"message": "Unathorized",
+			"status":  http.StatusNotFound,
+			"message": "User not found",
 		}})
 		 return
 	 } else {
 		fmt.Println("User Found")
-		if(dbuser.Is_active){
-			c.JSON(http.StatusOK, gin.H{"status": "success"})
+		if(dbuser.Password==user.Password){
+		if(dbuser.Is_active) {
+			c.JSON(http.StatusOK,gin.H{
+				"data" : dbuser,
+				"status":  http.StatusOK,
+			})
 		} else {
 			c.JSON(http.StatusOK, gin.H{"status": "user inactive"})
 		}
+	}else{
+		c.JSON(http.StatusNotFound,  gin.H{
+			"error" : gin.H { 
+			"status":  http.StatusUnauthorized,
+			"message": "Incorrect password",
+		}})
 	}
+   }
+}
+
+func SendEmail(c *gin.Context) {
+
+var email Models.Email
+var user Models.User
+
+if err := c.ShouldBindJSON(&email); err != nil {
+	c.JSON(http.StatusBadRequest, gin.H{"status": false})
+		return
+} else {
+	//c.JSON(http.StatusOK, gin.H{"status": true})
+	var code = Utils.StringWithCharset(6)
+	Utils.SendEmail(code,email.Email)
+	user.Password = code
+	err := Models.UpdateUserByEmail(&user, email.Email, code)
+   if err != nil {
+	c.JSON(http.StatusNotFound,  gin.H{
+		"error" : gin.H { 
+		"status":  http.StatusNotFound,
+		"message": "Not Found",
+	}})
+	return
+   }else {
+	c.JSON(http.StatusBadRequest, gin.H{"status": true})
+   }
+  }
 }
 
 
