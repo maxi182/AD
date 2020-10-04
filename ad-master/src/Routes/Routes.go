@@ -21,7 +21,7 @@ func SetupRouter() *gin.Engine {
 
 	accont_route := r.Group("/account")
 	{
-		accont_route.POST("resetpassword", Controllers.UpdatePassword)
+		accont_route.PUT("resetpassword", Controllers.UpdatePassword)
 		accont_route.PUT("email", Controllers.SendEmail)
 	}
 
