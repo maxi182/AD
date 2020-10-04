@@ -207,11 +207,10 @@ if err := c.ShouldBindJSON(&email); err != nil {
 	c.JSON(http.StatusBadRequest, gin.H{"status": false})
 		return
 } else {
-	//c.JSON(http.StatusOK, gin.H{"status": true})
 	var code = Utils.StringWithCharset(6)
 	Utils.SendEmail(code,email.Email)
 	user.Password = code
-	err := Models.UpdateUserByEmail(&user, email.Email, code)
+	err := Models.UpdateUserByEmail(&user, email.Email, code, true)
    if err != nil {
 	c.JSON(http.StatusNotFound,  gin.H{
 		"error" : gin.H { 
@@ -219,11 +218,37 @@ if err := c.ShouldBindJSON(&email); err != nil {
 		"message": "Not Found",
 	}})
 	return
-   }else {
-	c.JSON(http.StatusBadRequest, gin.H{"status": true})
+   } else {
+	c.JSON(http.StatusOK, gin.H{"status": true})
    }
   }
 }
+
+func UpdatePassword(c *gin.Context) {
+	var user Models.User
+	
+	if err := c.ShouldBindJSON(&user); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+	}else {
+
+		err := Models.UpdateUserByEmail(&user, user.Email, user.Password, false)
+	   if err != nil {
+		c.JSON(http.StatusNotFound,  gin.H{
+			"error" : gin.H { 
+			"status":  http.StatusNotFound,
+			"message": "Not Found",
+		}})
+		return
+	   } else {
+		c.JSON(http.StatusOK, gin.H{"status": true})
+	   }
+	  }
+	}
+
+
+//UPDATE USER BY EMAIL TO RESET PASSWORD
+
 
 
 

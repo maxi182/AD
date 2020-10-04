@@ -79,8 +79,10 @@ func UpdateUserById(user *User, id string) (err error) {
 	return nil
 }
 
-func UpdateUserByEmail(user *User, email string, psw string) (err error) {
-	if err = Config.DB.Model(user).Where("email = ?", email).Find(user).Update("password", psw).Error; err != nil {
+func UpdateUserByEmail(user *User, email string, psw string, isFirstLogin bool) (err error) {
+	fmt.Println(email)
+	fmt.Println(isFirstLogin)
+	if err = Config.DB.Model(user).Where("email = ?", email).Find(user).Updates(User{Password: psw, Is_first_login: isFirstLogin}).Error; err != nil {
 		return err
 	}
 	return nil

@@ -9,15 +9,20 @@ import (
 //SetupRouter ... Configure routes
 func SetupRouter() *gin.Engine {
 	r := gin.Default()
-	grp1 := r.Group("/user-api")
+	user_route := r.Group("/user-api")
 	{
-		grp1.GET("users", Controllers.GetUsers)
-		grp1.POST("users", Controllers.CreateUser)
-		grp1.POST("login", Controllers.LoginUser)
-		grp1.POST("email", Controllers.SendEmail)
-		grp1.GET("users/:id", Controllers.GetUserByID)
-		grp1.PUT("users/:id", Controllers.UpdateUser)
-		grp1.DELETE("user/:id", Controllers.DeleteUser)
+		user_route.GET("users", Controllers.GetUsers)
+		user_route.GET("users/:id", Controllers.GetUserByID)
+		user_route.POST("users", Controllers.CreateUser)
+		user_route.POST("login", Controllers.LoginUser)
+	    user_route.PUT("users/:id", Controllers.UpdateUser)
+	    user_route.DELETE("user/:id", Controllers.DeleteUser)
+	}
+
+	accont_route := r.Group("/account")
+	{
+		accont_route.POST("resetpassword", Controllers.UpdatePassword)
+		accont_route.PUT("email", Controllers.SendEmail)
 	}
 
 	return r

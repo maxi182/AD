@@ -21,7 +21,7 @@ type User struct {
 	Date_created   string          `json:"date_created"`
 	Password       string          `json:"password" validator:"min=4"`
 	Is_active      bool            `json:"is_active"`
-	Is_first_login bool            `json:"is_first_login"`
+	Is_first_login bool            `json:"is_first_login" gorm:"type:boolean"`
 }
 
 func (b *User) TableName() string {
