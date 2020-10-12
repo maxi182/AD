@@ -71,7 +71,7 @@ func CreateUser(c *gin.Context) {
 	}
 
 	//user.Password = Utils.EncodeBase64(user.Password)
-    user.Date_created = Utils.ConvertTimestampToDate(int64(now))
+	user.Date_created = Utils.ConvertTimestampToDate(int64(now))
 	err := Models.CreateUser(&user)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
@@ -107,7 +107,10 @@ func GetUserByID(c *gin.Context) {
 		}})
 		c.AbortWithStatus(http.StatusNotFound)
 	} else {
-		c.JSON(http.StatusOK, user)
+		c.JSON(http.StatusOK,gin.H{
+			"data" : user,
+			"status":  http.StatusOK,
+		})
 	}
 }
 

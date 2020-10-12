@@ -6,6 +6,7 @@ import (
 	"first-api/Routes"
 	"fmt"
 
+
 	"github.com/qor/validations"
 	"github.com/jinzhu/gorm"
 )
@@ -26,19 +27,50 @@ func main() {
 	}
 
 	defer Config.DB.Close()
-	validations.RegisterCallbacks(Config.DB)
-	Config.DB.AutoMigrate(&Models.User{})
-	Config.DB.AutoMigrate(&Models.Rubro{})
 	Config.DB.LogMode(true)
+	validations.RegisterCallbacks(Config.DB)
+	Config.DB.AutoMigrate(&Models.User{},&Models.Rubro{},&Models.Propiedad{},&Models.Unidad{})
 
-	//Config.DB.DropTableIfExists(&Models.User{})
+	Config.DB.CreateTable(&Models.User{})
 	Config.DB.CreateTable(&Models.Propiedad{})
 	Config.DB.CreateTable(&Models.Unidad{})
-	Config.DB.CreateTable(&Models.User{})
 	Config.DB.CreateTable(&Models.Rubro{})
 
-	//Models.NewPropiedad(1,"Av Libertador 5000","Edificio Libertador A","CABA", "Buenos Aires", -34.563957,-58.4383696)
- 
+	  rubros := []Models.Rubro{{Descripcion: "Electricista"},{Descripcion: "Plomero"},{Descripcion: "Gasista"}}
+	  for _, r := range rubros {
+		Config.DB.Create(&r)
+	 }
+	 propiedades := []Models.Propiedad{{Direccion:"Av libertador 5060",Nombre:"Chateau libertador", Localidad:"CABA", Provincia:"Buenos Aires",Lat:-34.563957, Lon:-58.4383696, Unidades:nil}}
+
+	 for _, p := range propiedades {
+		Config.DB.Omit("Unidades").Create(&p)
+	 }
+
+	 Config.DB.Table("RubroUsuario").AddForeignKey("user_id", "Usuarios(id)", "CASCADE", "CASCADE")
+	 Config.DB.Table("RubroUsuario").AddForeignKey("rubro_id", "Rubros(id)", "CASCADE", "CASCADE")
+
+	 Config.DB.Table("PropiedadUsuario").AddForeignKey("user_id", "Usuarios(id)", "CASCADE", "CASCADE")
+	 Config.DB.Table("PropiedadUsuario").AddForeignKey("propiedad_id", "Propiedades(id)", "CASCADE", "CASCADE")
+
+	 unidades := []Models.Unidad{{Piso:1, Depto:"e",Propiedad_id:1},{Piso:1, Depto:"f",Propiedad_id:1}}
+
+	 for _, u := range unidades {
+		Config.DB.Create(&u)
+	 }
+
+	 
+	//  users := []Models.User{{Usertype:2,Nombre:"Maximiliano",Apellido:"Ferraiuolo",Email:"maxi08@gmail.com",Image:"imagen",Fechanac:"08/08/1985",Dni:"32326616",
+	// 		Rubros:rubros,Propiedades:nil,Password:"08/10/2020",Is_active:false,Is_first_login:true}}
+
+	// 	for _, usr := range users {
+	// 	Config.DB.Omit("Rubros","Propiedades").Create(&usr)
+	
+	// 	}
+			
+
+
+
+
 	r := Routes.SetupRouter()
 	//running
 	r.Run()	

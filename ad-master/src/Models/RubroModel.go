@@ -1,4 +1,8 @@
 package Models
+import (
+	"first-api/Config"
+
+)
 
 
 type Rubro struct {
@@ -10,4 +14,9 @@ type Rubro struct {
 
 func (b *Rubro) TableName() string {
 	return "Rubros"
+}
+
+func NewRubro(rubro Rubro) error {
+	rs:=Config.DB.Create(rubro)
+	return rs.Error
 }

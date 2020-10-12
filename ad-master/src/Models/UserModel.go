@@ -10,14 +10,14 @@ type User struct {
 	UpdatedAt     time.Time
 	DeletedAt     *time.Time       `sql:"index"`
 	Usertype       uint            `json:"usertype"`
-	Nombre         string          `json:"nombre" valid:"length(6|20)"`
+	Nombre         string          `json:"nombre"`
 	Apellido       string          `json:"apellido"`
 	Email          string          `json:"email"`
 	Image          string          `json:"image"`
 	Fechanac       string          `json:"fechanac"`
 	Dni            string          `json:"dni"`
 	Rubros         []Rubro         `gorm:"many2many:RubroUsuario"  json:"rubros"`
-	Unidades       []Unidad        `gorm:"many2many:UnidadUsuario" json:"unidades"`
+	Propiedades    []Propiedad     `gorm:"many2many:PropiedadUsuario" json:"propiedades"`
 	Date_created   string          `json:"date_created"`
 	Password       string          `json:"password" validator:"min=4"`
 	Is_active      bool            `json:"is_active"`
