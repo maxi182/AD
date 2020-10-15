@@ -30,7 +30,7 @@ func SendEmail(body string, receiver string) {
 	from := "distribuidas2020@gmail.com"
 	pass := "Admin2020"
 	to := receiver
-
+	
 	msg := "From: " + from + "\n" +
 		"To: " + to + "\n" +
 		"Subject: Nueva contraseña de ingreso\n\n" +

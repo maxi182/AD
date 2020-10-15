@@ -40,19 +40,34 @@ func main() {
 	  for _, r := range rubros {
 		Config.DB.Create(&r)
 	 }
-	 propiedades := []Models.Propiedad{{Direccion:"Av libertador 5060",Nombre:"Chateau libertador", Localidad:"CABA", Provincia:"Buenos Aires",Lat:-34.563957, Lon:-58.4383696, Unidades:nil}}
+	 propiedades := []Models.Propiedad{{Direccion:"Av libertador 5060",Nombre:"Chateau libertador 1", Localidad:"CABA", Provincia:"Buenos Aires",Lat:-34.563957, Lon:-58.4383696},
+	 {Direccion:"Av libertador 5070",Nombre:"Chateau libertador 2", Localidad:"CABA", Provincia:"Buenos Aires",Lat:-34.563957, Lon:-58.4383696},
+	 {Direccion:"Av libertador 500",Nombre:"Chateau libertador 3", Localidad:"Vicente Lopez", Provincia:"Buenos Aires",Lat:-34.563957, Lon:-58.4383696}}
 
 	 for _, p := range propiedades {
-		Config.DB.Omit("Unidades").Create(&p)
+		Config.DB.Create(&p)
 	 }
 
 	 Config.DB.Table("RubroUsuario").AddForeignKey("user_id", "Usuarios(id)", "CASCADE", "CASCADE")
 	 Config.DB.Table("RubroUsuario").AddForeignKey("rubro_id", "Rubros(id)", "CASCADE", "CASCADE")
 
-	 Config.DB.Table("PropiedadUsuario").AddForeignKey("user_id", "Usuarios(id)", "CASCADE", "CASCADE")
-	 Config.DB.Table("PropiedadUsuario").AddForeignKey("propiedad_id", "Propiedades(id)", "CASCADE", "CASCADE")
+	 Config.DB.Table("UnidadUsuario").AddForeignKey("user_id", "Usuarios(id)", "CASCADE", "CASCADE")
+	 Config.DB.Table("UnidadUsuario").AddForeignKey("unidad_id", "Unidades(id)", "CASCADE", "CASCADE")
 
-	 unidades := []Models.Unidad{{Piso:1, Depto:"e",Propiedad_id:1},{Piso:1, Depto:"f",Propiedad_id:1}}
+
+	 fmt.Println("Status:", propiedades[0].Nombre)
+	 unidades := []Models.Unidad{{Piso:1, Depto:"A", PropiedadId:1},{Piso:1, Depto:"B",PropiedadId:1},{Piso:5, Depto:"C",PropiedadId:1},
+	                            {Piso:2, Depto:"A", PropiedadId:1},{Piso:2, Depto:"B",PropiedadId:1},{Piso:2, Depto:"C",PropiedadId:1},
+								{Piso:3, Depto:"A", PropiedadId:1},{Piso:3, Depto:"B",PropiedadId:1},{Piso:3, Depto:"C",PropiedadId:1},
+								{Piso:4, Depto:"A", PropiedadId:1},{Piso:4, Depto:"B",PropiedadId:1},{Piso:4, Depto:"C",PropiedadId:1},
+								{Piso:1, Depto:"A", PropiedadId:2},{Piso:1, Depto:"B",PropiedadId:2},{Piso:5, Depto:"C",PropiedadId:2},
+	                            {Piso:2, Depto:"A", PropiedadId:2},{Piso:2, Depto:"B",PropiedadId:2},{Piso:2, Depto:"C",PropiedadId:2},
+								{Piso:3, Depto:"A", PropiedadId:2},{Piso:3, Depto:"B",PropiedadId:2},{Piso:3, Depto:"C",PropiedadId:2},
+								{Piso:4, Depto:"A", PropiedadId:2},{Piso:4, Depto:"B",PropiedadId:2},{Piso:4, Depto:"C",PropiedadId:2},
+								{Piso:1, Depto:"A", PropiedadId:3},{Piso:1, Depto:"B",PropiedadId:3},{Piso:5, Depto:"C",PropiedadId:3},
+	                            {Piso:2, Depto:"A", PropiedadId:3},{Piso:2, Depto:"B",PropiedadId:3},{Piso:2, Depto:"C",PropiedadId:3},
+								{Piso:3, Depto:"A", PropiedadId:3},{Piso:3, Depto:"B",PropiedadId:3},{Piso:3, Depto:"C",PropiedadId:3},
+								{Piso:4, Depto:"A", PropiedadId:3},{Piso:4, Depto:"B",PropiedadId:3},{Piso:4, Depto:"C",PropiedadId:3}}
 
 	 for _, u := range unidades {
 		Config.DB.Create(&u)
@@ -67,10 +82,6 @@ func main() {
 	
 	// 	}
 			
-
-
-
-
 	r := Routes.SetupRouter()
 	//running
 	r.Run()	

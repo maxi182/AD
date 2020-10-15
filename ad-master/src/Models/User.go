@@ -28,14 +28,18 @@ func GetAllUsers(user *[]User) (err error) {
 func CreateUser(user *User) (err error) { 
 
 
-     if err = Config.DB.Omit("Rubros", "Propiedades").Create(user).Error; err != nil {
+     if err = Config.DB.Omit("Rubros", "Unidades","Propiedades").Create(user).Error; err != nil {
 	   return err
      }
    if err =  Config.DB.Model(user).Association("Rubros").Replace(user.Rubros).Error; err != nil {
 		return err
 	 }
+	 if err =  Config.DB.Model(user).Association("Propiedades").Replace(user.Propiedades).Error; err != nil {
+		return err
+	 }
 
-	if err =  Config.DB.Model(user).Association("Propiedades").Replace(user.Propiedades).Error; err != nil {
+
+	if err =  Config.DB.Model(user).Association("Unidades").Replace(user.Unidades).Error; err != nil {
 		return err
 	 }
  

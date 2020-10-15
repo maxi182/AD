@@ -17,7 +17,8 @@ type User struct {
 	Fechanac       string          `json:"fechanac"`
 	Dni            string          `json:"dni"`
 	Rubros         []Rubro         `gorm:"many2many:RubroUsuario"  json:"rubros"`
-	Propiedades    []Propiedad     `gorm:"many2many:PropiedadUsuario" json:"propiedades"`
+ 	Propiedades    []Propiedad     `gorm:"many2many:PropiedadUsuario" json:"propiedades"`
+    Unidades       []Unidad        `gorm:"many2many:UnidadUsuario" json:"unidades"`
 	Date_created   string          `json:"date_created"`
 	Password       string          `json:"password" validator:"min=4"`
 	Is_active      bool            `json:"is_active"`

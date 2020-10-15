@@ -9,28 +9,13 @@ import (
    "net/http" //https://golang.org/pkg/net/http/
    "github.com/gin-gonic/gin"
 )
-//GetPropiedadByID ... Get the property by id
-func GetPropiedadByID(c *gin.Context) {
-	id := c.Params.ByName("id")
-	var prop Models.Propiedad
-	err := Models.GetPropiedadByID(&prop, id)
-	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{
-			"error" : gin.H { 
-			"status":  http.StatusNotFound,
-			"message": err.Error(),
-		}})
-		c.AbortWithStatus(http.StatusNotFound)
-	} else {
-		c.JSON(http.StatusOK, prop)
-	}
-}
+
 
 //Get all propiedades 
-func GetPropiedades(c *gin.Context) {
-	var prop []Models.Propiedad
-	var p Models.Propiedad
-	err := Models.GetAllPropiedades(&prop)
+func GetUnidades(c *gin.Context) {
+	var unidad []Models.Unidad
+	var u Models.Unidad
+	err := Models.GetAllUnidades(&unidad)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
 			"error" : gin.H { 
@@ -40,29 +25,29 @@ func GetPropiedades(c *gin.Context) {
 		c.AbortWithStatus(http.StatusNotFound)
 	} else {
 		log.Println("====== Bind By Query String ======")
-		log.Println(p.Nombre)
-		//var rubro []Models.RubroUsuario
+		log.Println(u.Piso)
 	 
 		fmt.Println(c.Request.URL.Query())
 		 page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
 		 limit, _ := strconv.Atoi(c.DefaultQuery("limit", "15"))
 	
 		  paginator := pagination.Paging(&pagination.Param{
-			DB:      Config.DB.Preload("Unidades"),
+			DB:      Config.DB.Preload("Propiedades"),
 			Page:    page,
 			Limit:   limit,
 			OrderBy: []string{"id"},
 			ShowSQL: true,
-		},  &prop)
+		},  &unidad)
  
 		c.JSON(200, paginator)
 
 	}
 }
 
+
 //Get all propiedades for the user.
-func GetPropiedadesByUser(c *gin.Context) {
-	var prop []Models.Propiedad
+func GetUnidadesByUser(c *gin.Context) {
+	var unidad []Models.Unidad
 	params, ok := c.Request.URL.Query()["userId"]
 
 	if(!ok){
@@ -73,7 +58,7 @@ func GetPropiedadesByUser(c *gin.Context) {
 		}})
 		c.AbortWithStatus(http.StatusBadRequest)
 	}
-	err := Models.GetAllPropiedadesByUser(&prop, string(params[0]))
+	err := Models.GetAllUnidadesByUser(&unidad, string(params[0]))
 	if (err != nil || !ok ) {
 		c.JSON(http.StatusNotFound, gin.H{
 			"error" : gin.H { 
@@ -87,12 +72,12 @@ func GetPropiedadesByUser(c *gin.Context) {
 		 limit, _ := strconv.Atoi(c.DefaultQuery("limit", "15"))
 	
 		  paginator := pagination.Paging(&pagination.Param{
-			DB:       Config.DB.Model(&prop).Select("*").Joins("inner join PropiedadUsuario on PropiedadUsuario.propiedad_id = Propiedades.id").Where("PropiedadUsuario.user_id = ?", params).Find(&prop),
+			DB:      Config.DB.Model(&unidad).Preload("Propiedad").Select("*").Joins("inner join UnidadUsuario on Unidades.id = UnidadUsuario.unidad_id inner join Propiedades on Propiedades.id=Unidades.propiedad_id").Where("UnidadUsuario.user_id = ?",params).Find(&unidad),
 			Page:    page,
 			Limit:   limit,
-			OrderBy: []string{"id"},
+			OrderBy: []string{"Unidades.id"},
 			ShowSQL: true,
-		},  &prop)
+		},  &unidad)
 		c.JSON(http.StatusOK, paginator)
 	}
 }
