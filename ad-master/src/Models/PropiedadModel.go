@@ -6,13 +6,15 @@ import (
 )
 
 type Propiedad struct {
-	ID        uint      `gorm:"primary_key;auto_increment" json:"propiedad_id"` 
-	Direccion string    `json:"direccion"`
-	Nombre    string    `json:"nombre"`
-	Localidad string    `json:"localidad"`
-	Provincia string    `json:"provincia"`
-	Lat       float64   `json:"lat"`
-	Lon       float64   `json:"lon"`
+	ID           uint     		 `gorm:"primary_key;auto_increment" json:"propiedad_id"` 
+	Direccion    string   		 `json:"direccion"`
+	Nombre       string    		 `json:"nombre"`
+	Localidad    string   		 `json:"localidad"`
+	Provincia    string   		 `json:"provincia"`
+	Image        string    		 `json:"image"`
+	SharedAreas  []SharedArea	 `gorm:"many2many:SharedPropiedad" json:"shared"`
+	Lat          float64   		 `json:"lat"`
+	Lon          float64 		 `json:"lon"`
 }
 
 func (b *Propiedad) TableName() string {

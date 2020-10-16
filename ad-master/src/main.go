@@ -29,21 +29,36 @@ func main() {
 	defer Config.DB.Close()
 	Config.DB.LogMode(true)
 	validations.RegisterCallbacks(Config.DB)
-	Config.DB.AutoMigrate(&Models.User{},&Models.Rubro{},&Models.Propiedad{},&Models.Unidad{})
+	Config.DB.AutoMigrate(&Models.User{},&Models.Rubro{},&Models.Propiedad{},&Models.Unidad{},&Models.SharedArea{})
 
 	Config.DB.CreateTable(&Models.User{})
 	Config.DB.CreateTable(&Models.Propiedad{})
 	Config.DB.CreateTable(&Models.Unidad{})
 	Config.DB.CreateTable(&Models.Rubro{})
+	Config.DB.CreateTable(&Models.SharedArea{})
 
 	  rubros := []Models.Rubro{{Descripcion: "Electricista"},{Descripcion: "Plomero"},{Descripcion: "Gasista"}}
 	  for _, r := range rubros {
 		Config.DB.Create(&r)
 	 }
-	 propiedades := []Models.Propiedad{{Direccion:"Av libertador 5060",Nombre:"Chateau libertador 1", Localidad:"CABA", Provincia:"Buenos Aires",Lat:-34.563957, Lon:-58.4383696},
-	 {Direccion:"Av libertador 5070",Nombre:"Chateau libertador 2", Localidad:"CABA", Provincia:"Buenos Aires",Lat:-34.563957, Lon:-58.4383696},
-	 {Direccion:"Av libertador 500",Nombre:"Chateau libertador 3", Localidad:"Vicente Lopez", Provincia:"Buenos Aires",Lat:-34.563957, Lon:-58.4383696}}
 
+	 sharedAreas :=  []Models.SharedArea{{Descripcion:"Pileta"},{Descripcion:"Sum"},{Descripcion:"GYM"}}
+	//  for _, shared := range sharedAreas {
+	// 	Config.DB.Create(&shared)
+	//  }
+
+	 propiedades := []Models.Propiedad{{Direccion:"Av libertador 101",Nombre:"Al Rio", Localidad:"Vicente Lopez", Provincia:"Buenos Aires", Image: "https://media.gettyimages.com/photos/modern-condominiums-picture-id952954132?s=2048x2048" ,Lat:-34.563957, Lon:-58.4383696,SharedAreas:sharedAreas},
+	 {Direccion:"Av Libertador 7050",Nombre:"Chateau libertador 2", Localidad:"CABA", Provincia:"Buenos Aires",Image: "https://images.unsplash.com/photo-1589095093845-93a387ebc7ee?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80" ,Lat:-34.563957, Lon:-58.4383696,SharedAreas:sharedAreas},
+	 {Direccion:"Av Figueroa Alcorta 3600",Nombre:"Le Parc", Localidad:"CABA", Provincia:"Buenos Aires", Image: "https://lh3.googleusercontent.com/proxy/6MG-osqJE_roLB90JhBkuike-jqixSx4qvLuMUhAZuNY2vL7-MkOYzUBfnIlCsn1mEjQGYmVkIg9lJShfvky3uS1xjTphhfdGCxYO3zLFXOsIFFP2Q3qREjNn0PXVL_cQkU4WipcLjGfbJ9a5G7q" ,Lat:-34.563957, Lon:-58.4383696},
+	 {Direccion:"Azucena Villaflor 559",Nombre:"Edificio Alvear", Localidad:"Puerto Madero", Provincia:"Buenos Aires", Image: "https://images.unsplash.com/photo-1535010827831-0f324b6f6908?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=321&q=80" ,Lat:-34.563957, Lon:-58.4383696},
+	 {Direccion:"Azucena Villaflor 559",Nombre:"Edificio Alvear", Localidad:"Puerto Madero", Provincia:"Buenos Aires", Image: "https://images.unsplash.com/photo-1535010827831-0f324b6f6908?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=321&q=80" ,Lat:-34.563957, Lon:-58.4383696},
+	 {Direccion:"Azucena Villaflor 559",Nombre:"Edificio Alvear", Localidad:"Puerto Madero", Provincia:"Buenos Aires", Image: "https://images.unsplash.com/photo-1535010827831-0f324b6f6908?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=321&q=80" ,Lat:-34.563957, Lon:-58.4383696},
+	 {Direccion:"Azucena Villaflor 559",Nombre:"Edificio Alvear", Localidad:"Puerto Madero", Provincia:"Buenos Aires", Image: "https://images.unsplash.com/photo-1535010827831-0f324b6f6908?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=321&q=80" ,Lat:-34.563957, Lon:-58.4383696},
+	 {Direccion:"Azucena Villaflor 559",Nombre:"Edificio Alvear", Localidad:"Puerto Madero", Provincia:"Buenos Aires", Image: "https://images.unsplash.com/photo-1535010827831-0f324b6f6908?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=321&q=80" ,Lat:-34.563957, Lon:-58.4383696},
+	 {Direccion:"Azucena Villaflor 559",Nombre:"Edificio Alvear", Localidad:"Puerto Madero", Provincia:"Buenos Aires", Image: "https://images.unsplash.com/photo-1535010827831-0f324b6f6908?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=321&q=80" ,Lat:-34.563957, Lon:-58.4383696}}
+	 
+	 
+	 
 	 for _, p := range propiedades {
 		Config.DB.Create(&p)
 	 }

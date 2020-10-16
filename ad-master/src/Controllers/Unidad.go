@@ -29,7 +29,7 @@ func GetUnidades(c *gin.Context) {
 	 
 		fmt.Println(c.Request.URL.Query())
 		 page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
-		 limit, _ := strconv.Atoi(c.DefaultQuery("limit", "15"))
+		 limit, _ := strconv.Atoi(c.DefaultQuery("limit", "3"))
 	
 		  paginator := pagination.Paging(&pagination.Param{
 			DB:      Config.DB.Preload("Propiedades"),
@@ -49,7 +49,7 @@ func GetUnidades(c *gin.Context) {
 func GetUnidadesByUser(c *gin.Context) {
 	var unidad []Models.Unidad
 	params, ok := c.Request.URL.Query()["userId"]
-
+	
 	if(!ok){
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error" : gin.H { 
@@ -72,7 +72,7 @@ func GetUnidadesByUser(c *gin.Context) {
 		 limit, _ := strconv.Atoi(c.DefaultQuery("limit", "15"))
 	
 		  paginator := pagination.Paging(&pagination.Param{
-			DB:      Config.DB.Model(&unidad).Preload("Propiedad").Select("*").Joins("inner join UnidadUsuario on Unidades.id = UnidadUsuario.unidad_id inner join Propiedades on Propiedades.id=Unidades.propiedad_id").Where("UnidadUsuario.user_id = ?",params).Find(&unidad),
+			DB:      Config.DB.Model(&unidad).Preload("Propiedad").Preload("Propiedad.SharedAreas").Select("*").Joins("inner join UnidadUsuario on Unidades.id = UnidadUsuario.unidad_id inner join Propiedades on Propiedades.id=Unidades.propiedad_id").Where("UnidadUsuario.user_id = ?",params).Find(&unidad),
 			Page:    page,
 			Limit:   limit,
 			OrderBy: []string{"Unidades.id"},
