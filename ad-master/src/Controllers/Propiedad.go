@@ -48,7 +48,7 @@ func GetPropiedades(c *gin.Context) {
 		 limit, _ := strconv.Atoi(c.DefaultQuery("limit", "15"))
 	
 		  paginator := pagination.Paging(&pagination.Param{
-			DB:      Config.DB.Preload("Unidades"),
+			DB:      Config.DB.Preload("SharedAreas"),
 			Page:    page,
 			Limit:   limit,
 			OrderBy: []string{"id"},
@@ -87,7 +87,7 @@ func GetPropiedadesByUser(c *gin.Context) {
 		 limit, _ := strconv.Atoi(c.DefaultQuery("limit", "15"))
 	
 		  paginator := pagination.Paging(&pagination.Param{
-			DB:       Config.DB.Model(&prop).Select("*").Joins("inner join PropiedadUsuario on PropiedadUsuario.propiedad_id = Propiedades.id").Where("PropiedadUsuario.user_id = ?", params).Find(&prop),
+			DB:       Config.DB.Model(&prop).Preload("SharedAreas").Select("*").Joins("inner join PropiedadUsuario on PropiedadUsuario.propiedad_id = Propiedades.id").Where("PropiedadUsuario.user_id = ?", params).Find(&prop),
 			Page:    page,
 			Limit:   limit,
 			OrderBy: []string{"id"},

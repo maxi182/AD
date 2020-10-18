@@ -17,9 +17,9 @@ func SetupRouter() *gin.Engine {
 		user_route.POST("login", Controllers.LoginUser)
 	    user_route.PUT("users/:id", Controllers.UpdateUser)
 		user_route.DELETE("user/:id", Controllers.DeleteUser)
-		user_route.GET("propiedades/:id", Controllers.GetPropiedadByID)
-		user_route.GET("propiedades", Controllers.GetPropiedades)
-		user_route.GET("propiedadess", Controllers.GetPropiedadesByUser)
+		//user_route.GET("propiedades/:id", Controllers.GetPropiedadByID)
+		user_route.GET("propiedades/all", Controllers.GetPropiedades)
+		user_route.GET("propiedades", Controllers.GetPropiedadesByUser)
 		user_route.GET("unidades", Controllers.GetUnidadesByUser)
 	}
 

@@ -6,6 +6,7 @@ import (
    "strconv"
    "github.com/biezhi/gorm-paginator/pagination"
    "log"
+   "github.com/jinzhu/gorm"
    "net/http" //https://golang.org/pkg/net/http/
    "github.com/gin-gonic/gin"
 )
@@ -47,9 +48,11 @@ func GetUnidades(c *gin.Context) {
 
 //Get all propiedades for the user.
 func GetUnidadesByUser(c *gin.Context) {
+
 	var unidad []Models.Unidad
 	params, ok := c.Request.URL.Query()["userId"]
-	
+	paramFilter := c.Query("filter") 
+ 
 	if(!ok){
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error" : gin.H { 
@@ -70,9 +73,9 @@ func GetUnidadesByUser(c *gin.Context) {
 		fmt.Println(c.Request.URL.Query())
 		 page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
 		 limit, _ := strconv.Atoi(c.DefaultQuery("limit", "15"))
-	
-		  paginator := pagination.Paging(&pagination.Param{
-			DB:      Config.DB.Model(&unidad).Preload("Propiedad").Preload("Propiedad.SharedAreas").Select("*").Joins("inner join UnidadUsuario on Unidades.id = UnidadUsuario.unidad_id inner join Propiedades on Propiedades.id=Unidades.propiedad_id").Where("UnidadUsuario.user_id = ?",params).Find(&unidad),
+
+		  paginator := pagination.Paging(&pagination.Param{																																												 									
+			DB:      getQuery(&unidad,params[0],paramFilter),
 			Page:    page,
 			Limit:   limit,
 			OrderBy: []string{"Unidades.id"},
@@ -81,3 +84,13 @@ func GetUnidadesByUser(c *gin.Context) {
 		c.JSON(http.StatusOK, paginator)
 	}
 }
+
+func getQuery(unidad *[]Models.Unidad, userId string, filter string)  *gorm.DB{
+
+	if(len(filter)>0) {
+			  return Config.DB.Model(&unidad).Preload("Propiedad").Preload("Propiedad.SharedAreas").Select("*").Joins("inner join UnidadUsuario on Unidades.id = UnidadUsuario.unidad_id inner join Propiedades on Propiedades.id=Unidades.propiedad_id").Where("UnidadUsuario.user_id = ? AND Propiedades.nombre LIKE ?", userId, "%"+filter+"%").Find(&unidad)
+	} else {
+       		  return Config.DB.Model(&unidad).Preload("Propiedad").Preload("Propiedad.SharedAreas").Select("*").Joins("inner join UnidadUsuario on Unidades.id = UnidadUsuario.unidad_id inner join Propiedades on Propiedades.id=Unidades.propiedad_id").Where("UnidadUsuario.user_id = ?", userId).Find(&unidad)
+	}
+}
+

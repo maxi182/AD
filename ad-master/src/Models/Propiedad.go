@@ -17,7 +17,7 @@ func GetPropiedadByID(propiedad *Propiedad, id string) (err error) {
 //GetAllPropiedades Fetch all propiedad data
 func GetAllPropiedades(propiedad *[]Propiedad) (err error) {
 
-	if err = Config.DB.Preload("Unidades").Find(&propiedad).Error; err != nil {
+	if err = Config.DB.Preload("SharedAreas").Find(&propiedad).Error; err != nil {
 		return err
 	}
 	return nil
@@ -27,7 +27,7 @@ func GetAllPropiedades(propiedad *[]Propiedad) (err error) {
 //GetAllPropiedades Fetch all propiedad data
 func GetAllPropiedadesByUser(propiedad *[]Propiedad, userId string) (err error) {
 
-  if err = Config.DB.Model(&Propiedad{}).Select("*").Joins("inner join PropiedadUsuario on PropiedadUsuario.propiedad_id = Propiedades.id").Where("PropiedadUsuario.user_id = ?", userId).Find(&propiedad).Error; err != nil {
+  if err = Config.DB.Model(&Propiedad{}).Preload("SharedAreas").Select("*").Joins("inner join PropiedadUsuario on PropiedadUsuario.propiedad_id = Propiedades.id").Where("PropiedadUsuario.user_id = ?", userId).Find(&propiedad).Error; err != nil {
 	   	return err
 	  }
   return nil
