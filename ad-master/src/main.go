@@ -36,6 +36,9 @@ func main() {
 	Config.DB.CreateTable(&Models.Unidad{})
 	Config.DB.CreateTable(&Models.Rubro{})
 	Config.DB.CreateTable(&Models.SharedArea{})
+	Config.DB.CreateTable(&Models.Reclamo{})
+	//Config.DB.CreateTable(&Models.Comentario{})
+	//Config.DB.CreateTable(&Models.Foto{})
 
 	  rubros := []Models.Rubro{{Descripcion: "Electricista"},{Descripcion: "Plomero"},{Descripcion: "Gasista"}}
 	  for _, r := range rubros {
