@@ -5,7 +5,7 @@ import (
 )
  
 type User struct {
-	Id             uint            `gorm:"primary_key"`
+	Id             uint           `gorm:"primary_key" json:"usuario_id"`
 	CreatedAt     time.Time
 	UpdatedAt     time.Time
 	DeletedAt     *time.Time       `sql:"index"`

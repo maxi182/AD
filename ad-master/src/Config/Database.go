@@ -23,7 +23,8 @@ type DBConfig struct {
   		Port:     3306,
   		User:     "root",
         Password: "123456",
- 		DBName:   "testdb",
+		 DBName:   "testdb",
+ 
 	}
  	return &dbConfig
  }

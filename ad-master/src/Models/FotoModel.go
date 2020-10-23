@@ -7,7 +7,8 @@ import (
 )
 
 type Foto struct {
-	ID        		uint      `gorm:"primary_key;auto_increment" json:"foto_id"` 
+	Id       		uint      `gorm:"primary_key;auto_increment" json:"foto_id"` 
+	ComentarioId	uint 	  `json:"comentario_id"` 
 	Fecha 			time.Time `json:"fecha"`
 	Uri    			string    `json:"uri"`
 }

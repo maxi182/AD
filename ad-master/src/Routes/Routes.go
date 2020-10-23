@@ -21,13 +21,27 @@ func SetupRouter() *gin.Engine {
 		user_route.GET("propiedades/all", Controllers.GetPropiedades)
 		user_route.GET("propiedades", Controllers.GetPropiedadesByUser)
 		user_route.GET("unidades", Controllers.GetUnidadesByUser)
-		user_route.POST("reclamos", Controllers.CreateReclamo)
+		user_route.GET("reclamos", Controllers.GetReclamosByUser)
+
 	}
 
 	accont_route := r.Group("/account")
 	{
 		accont_route.PUT("resetpassword", Controllers.UpdatePassword)
 		accont_route.PUT("email", Controllers.SendEmail)
+	}
+
+	reclamos_route := r.Group("/reclamo")
+	{
+		reclamos_route.POST("reclamos", Controllers.CreateReclamo)
+		reclamos_route.POST("comentario", Controllers.CreateComentario)
+		reclamos_route.GET("reclamos", Controllers.GetReclamos)
+		reclamos_route.PUT("reclamo/:id", Controllers.UpdateReclamo)
+		reclamos_route.PUT("estado", Controllers.UpdateEstadoReclamo)
+	}
+	notification_route := r.Group("/notification-api")
+	{
+		notification_route.GET("notifications", Controllers.GetNotificationsByUser)
 	}
 
 	return r

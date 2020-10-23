@@ -12,7 +12,6 @@ func ConvertTimestampToDate(input int64) string {
 	return string(tm.Format("2006-01-02 15:04:05"))
 }
 
-
 	
 func ShouldResetPassword(psw_created_date string) bool{
  

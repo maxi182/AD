@@ -5,7 +5,7 @@ import (
 	"first-api/Models"
 	"first-api/Routes"
 	"fmt"
-
+ 
 
 	"github.com/qor/validations"
 	"github.com/jinzhu/gorm"
@@ -28,6 +28,8 @@ func main() {
 
 	defer Config.DB.Close()
 	Config.DB.LogMode(true)
+	
+  
 	validations.RegisterCallbacks(Config.DB)
 	Config.DB.AutoMigrate(&Models.User{},&Models.Rubro{},&Models.Propiedad{},&Models.Unidad{},&Models.SharedArea{})
 
@@ -36,8 +38,9 @@ func main() {
 	Config.DB.CreateTable(&Models.Unidad{})
 	Config.DB.CreateTable(&Models.Rubro{})
 	Config.DB.CreateTable(&Models.SharedArea{})
-	Config.DB.CreateTable(&Models.Reclamo{})
-	//Config.DB.CreateTable(&Models.Comentario{})
+	 Config.DB.CreateTable(&Models.Reclamo{})
+	 Config.DB.CreateTable(&Models.Comentario{})
+	 Config.DB.CreateTable(&Models.Notificacion{})
 	//Config.DB.CreateTable(&Models.Foto{})
 
 	  rubros := []Models.Rubro{{Descripcion: "Electricista"},{Descripcion: "Plomero"},{Descripcion: "Gasista"}}
@@ -71,6 +74,10 @@ func main() {
 
 	 Config.DB.Table("UnidadUsuario").AddForeignKey("user_id", "Usuarios(id)", "CASCADE", "CASCADE")
 	 Config.DB.Table("UnidadUsuario").AddForeignKey("unidad_id", "Unidades(id)", "CASCADE", "CASCADE")
+
+	 Config.DB.Table("SharedReclamo").AddForeignKey("reclamo_id", "Reclamos(id)", "CASCADE", "CASCADE")
+	 Config.DB.Table("SharedReclamo").AddForeignKey("shared_area_id", "Shared(id)", "CASCADE", "CASCADE")
+
 
 
 	 fmt.Println("Status:", propiedades[0].Nombre)

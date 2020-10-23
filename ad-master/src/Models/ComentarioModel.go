@@ -2,17 +2,16 @@ package Models
 
 import (
 	"first-api/Config"
-	"time"
-
 )
 
 type Comentario struct {
-	ID        		uint      `gorm:"primary_key;auto_increment" json:"comentario_id"` 
-	ReclamoId		uint	 `json:"reclamo_id"`
-	Fecha 			time.Time `json:"fecha"`
+	Id        		uint      `gorm:"primary_key;auto_increment" json:"comentario_id"` 
+	ReclamoId		uint	  `json:"reclamo_id"`
+	Date_created    string    `json:"date_created"`
 	Texto    		string    `json:"texto"`
-	Usuario			User	  `gorm:"foreignKey:id" json:"usuario"`  
-	Fotos  			[]Foto   `gorm:"foreignKey:foto_id" json:"fotos"`        //`gorm:"many2many:PropiedadUnidad" json:"unidades"`
+	UsuarioId       uint      `json:"usuario_id"`
+	Usuario			User	  `gorm:"foreignKey:UsuarioId" json:"usuario"`  
+	Fotos  			[]Foto    `gorm:"foreignKey:foto_id" json:"fotos"`        //`gorm:"many2many:PropiedadUnidad" json:"unidades"`
 }
 
 func (b *Comentario) TableName() string {
