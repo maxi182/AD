@@ -15,9 +15,9 @@ func GetReclamoByID(reclamo *Reclamo, id string) (err error) {
 }
 
 //GetAllReclamos 
-func GetAllReclamosByPropiedad(reclamo *[]Reclamo, propiedadId string) (err error) {
+func GetAllReclamos(reclamo *[]Reclamo) (err error) {
 
-	if err = Config.DB.Model(&Reclamo{}).Preload("Comentarios").Preload("Propiedad").Select("*").Joins("inner join Comentarios on Comentarios.reclamo_id = Reclamos.id").Where("Reclamos.propiedad_id = ?", propiedadId).Find(&reclamo).Error; err != nil {
+	if err = Config.DB.Model(&Reclamo{}).Preload("Comentarios").Preload("Propiedad").Select("*").Joins("inner join Comentarios on Comentarios.reclamo_id = Reclamos.id").Find(&reclamo).Error; err != nil {
 		return err
    }
 return nil
@@ -39,9 +39,9 @@ func UpdateReclamo(reclamo *Reclamo, id string) (err error) {
 	return nil
 }
 
-func UpdateEstadoReclamo(reclamo *Reclamo, reclamoId uint, estado uint) (err error) {
+func UpdateEstadoReclamo(reclamo *Reclamo, reclamoId uint, estado uint, updated string) (err error) {
 
-	if err = Config.DB.Model(reclamo).Where("ID = ?", reclamoId).Find(reclamo).Updates(map[string]interface{}{"estado": estado}).Error; err != nil {
+	if err = Config.DB.Model(reclamo).Where("ID = ?", reclamoId).Find(reclamo).Updates(map[string]interface{}{"estado": estado, "date_updated":updated}).Error; err != nil {
 		return err
 	}
 	return nil

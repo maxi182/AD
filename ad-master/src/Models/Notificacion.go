@@ -14,7 +14,7 @@ func CreateNotification(notificacion *Notificacion) (err error) {
 //GetAllReclamosByUser Fetch all propiedad data
 func GetAllNotificationsByUser(notificacion *[]Notificacion, userId string) (err error) {
 	
-	if err = Config.DB.Model(&notificacion).Preload("Usuario").Select("*").Joins("inner join Reclamos on Notificaciones.usuario_id = Reclamos.usuario_id ").Where("Notificaciones.usuario_id = ?", userId).Find(&notificacion).Error; err != nil {
+	if err = Config.DB.Model(&notificacion).Preload("Usuario").Select("*").Where("Notificaciones.usuario_id = ?", userId).Find(&notificacion).Error; err != nil {
 			 return err
 		}
 	return nil

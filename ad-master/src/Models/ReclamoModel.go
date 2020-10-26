@@ -7,11 +7,12 @@ import (
 type Reclamo struct {
 	ID        		uint      		`gorm:"primary_key;auto_increment" json:"reclamo_id"` 
 	Date_created    string          `json:"date_created"`
+	Date_updated    string          `json:"date_updated"`
 	Estado    		uint    		`json:"estado"`
 	Usuario			User 			`gorm:"foreignKey:id" json:"creator"`  
 	UsuarioId		uint 			`json:"usuario_id"`
 	Comentarios  	[]Comentario   	`json:"comentarios"`        //`gorm:"many2many:PropiedadUnidad" json:"unidades"`
-	//Unidad			Unidad			`gorm:"foreignKey:unidad_id" json:"unidad"`
+	//Unidad		Unidad			`gorm:"foreignKey:unidad_id" json:"unidad"`
 	UnidadId		uint			`json:"unidad_id"`
 	PropiedadId     uint            `json:"propiedad_id"`
 	Propiedad 	    Propiedad       `json:"propiedad"`

@@ -40,10 +40,10 @@ func GetNotificationsByUser(c *gin.Context) {
 		 limit, _ := strconv.Atoi(c.DefaultQuery("limit", "15"))
 	
 		  paginator := pagination.Paging(&pagination.Param{
-			DB:      Config.DB.Model(&notificacion).Preload("Usuario").Select("*").Joins("inner join Reclamos on Notificaciones.usuario_id = Reclamos.usuario_id ").Where("Notificaciones.usuario_id = ?", params).Find(&notificacion),
+			DB:      Config.DB.Model(&notificacion).Preload("Usuario").Select("*").Where("Notificaciones.usuario_id = ?", params).Find(&notificacion),
 			Page:    page,
 			Limit:   limit,
-			OrderBy: []string{"Reclamos.id"},
+			OrderBy: []string{"Notificaciones.id"},
 			ShowSQL: true,
 		},  &notificacion)
  
@@ -52,16 +52,29 @@ func GetNotificationsByUser(c *gin.Context) {
 }
 
 
-func saveNotificationComent(comentario Models.Comentario){
+func saveNotificationComent(comentario Models.Comentario) {
 	var now = time.Now().Unix()
 	var notification Models.Notificacion
 	notification.ReclamoId = comentario.ReclamoId
-	notification.Type = 1 //Comentario creado
+	notification.Type = 10 //Comentario creado
 	notification.Date_created = Utils.ConvertTimestampToDate(int64(now))
 	notification.UsuarioId = comentario.UsuarioId
 	err := Models.CreateNotification(&notification)
 	if err != nil {
-		fmt.Println("notification_created", notification.Id)
+		fmt.Println("notification_created_fail", notification.Id)
 	}
 
+}
+
+func saveNotificationUpdateEstado(reclamo Models.Reclamo){
+	var now = time.Now().Unix()
+	var notification Models.Notificacion
+	notification.ReclamoId = reclamo.ID
+	notification.Type = reclamo.Estado //Reclamo cambio de estado lo guarda como type en notificacion
+	notification.Date_created = Utils.ConvertTimestampToDate(int64(now))
+	notification.UsuarioId = reclamo.UsuarioId
+	err := Models.CreateNotification(&notification)
+	if err != nil {
+		fmt.Println("notification_estado_fail", notification.Id)
+	}
 }

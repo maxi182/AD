@@ -25,3 +25,12 @@ func GetAllUnidadesByUser(unidad *[]Unidad, userId string) (err error) {
 		}
 	return nil
   }
+
+  //GetUnidades by user
+func GetAllPropiedadesFromUnidadesByUser(unidad *[]Unidad, userId string) (err error) {
+
+	if err = Config.DB.Model(&Unidad{}).Preload("Propiedad").Select("*").Joins("inner join UnidadUsuario on Unidades.id = UnidadUsuario.unidad_id inner join Propiedades on Propiedades.id=Unidades.propiedad_id").Where("UnidadUsuario.user_id = ?", userId).Find(&unidad).Error; err != nil {
+			 return err
+		}
+	return nil
+  }

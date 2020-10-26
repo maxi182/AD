@@ -6,7 +6,7 @@ type Unidad struct {
 	Piso          uint       `json:"piso"`
 	Depto         string     `json:"dpto"`
 	PropiedadId   uint       `json:"propiedad_id"`
-	Propiedad 	  Propiedad  `json:"propiedad"`
+	Propiedad 	  Propiedad  `gorm:"foreignKey:PropiedadId" json:"propiedad"`
 }
 
 

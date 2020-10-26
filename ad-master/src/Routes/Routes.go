@@ -17,12 +17,9 @@ func SetupRouter() *gin.Engine {
 		user_route.POST("login", Controllers.LoginUser)
 		user_route.PUT("users/:id", Controllers.UpdateUser)
 		user_route.DELETE("user/:id", Controllers.DeleteUser)
-		//user_route.GET("propiedades/:id", Controllers.GetPropiedadByID)
 		user_route.GET("propiedades/all", Controllers.GetPropiedades)
 		user_route.GET("propiedades", Controllers.GetPropiedadesByUser)
 		user_route.GET("unidades", Controllers.GetUnidadesByUser)
-		user_route.GET("reclamos", Controllers.GetReclamosByUser)
-
 	}
 
 	accont_route := r.Group("/account")
@@ -35,7 +32,8 @@ func SetupRouter() *gin.Engine {
 	{
 		reclamos_route.POST("reclamos", Controllers.CreateReclamo)
 		reclamos_route.POST("comentario", Controllers.CreateComentario)
-		reclamos_route.GET("reclamos", Controllers.GetReclamos)
+		reclamos_route.GET("reclamos/all", Controllers.GetReclamos)
+		reclamos_route.GET("reclamos", Controllers.GetReclamosByUser)
 		reclamos_route.PUT("reclamo/:id", Controllers.UpdateReclamo)
 		reclamos_route.PUT("estado", Controllers.UpdateEstadoReclamo)
 	}

@@ -2,6 +2,7 @@ package Controllers
 import (
    "first-api/Config"
    "first-api/Models"
+   "github.com/jinzhu/gorm"
    "fmt"
    "time"
    "strconv"
@@ -38,6 +39,7 @@ func CreateReclamo(c *gin.Context) {
 			},
 			"status":  http.StatusOK,
 		})
+		saveNotificationUpdateEstado(rec)
 		fmt.Println("reclamo_creado", rec.ID)
 	}
 }
@@ -63,17 +65,8 @@ func GetReclamoByID(c *gin.Context) {
 func GetReclamos(c *gin.Context) {
 
 	var rec []Models.Reclamo
-	var r Models.Reclamo
-	params, ok := c.Request.URL.Query()["propId"]
-	if(!ok){
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error" : gin.H { 
-			"status":  http.StatusBadRequest,
-			"message": "Invalid param",
-		}})
-		c.AbortWithStatus(http.StatusBadRequest)
-	}
-	err := Models.GetAllReclamosByPropiedad(&rec,string(params[0]))
+	
+	err := Models.GetAllReclamos(&rec)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
 			"error" : gin.H { 
@@ -82,16 +75,13 @@ func GetReclamos(c *gin.Context) {
 		}})
 		c.AbortWithStatus(http.StatusNotFound)
 	} else {
-		log.Println("====== Bind By Query String ======")
-		log.Println(r.ID)
-		//var rubro []Models.RubroUsuario
-	 
+			 
 		fmt.Println(c.Request.URL.Query())
 		 page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
 		 limit, _ := strconv.Atoi(c.DefaultQuery("limit", "15"))
 	
 		  paginator := pagination.Paging(&pagination.Param{
-			DB:   Config.DB.Model(&rec).Preload("Comentarios").Preload("Usuario").Preload("Comentarios.Usuario").Preload("Propiedad").Select("*").Joins("inner join Comentarios on Comentarios.reclamo_id = Reclamos.id").Where("Reclamos.propiedad_id = ?", params).Find(&rec),
+			DB:   Config.DB.Model(&rec).Preload("Comentarios").Preload("Usuario").Preload("Comentarios.Usuario").Preload("Propiedad").Select("*").Joins("inner join Comentarios on Comentarios.reclamo_id = Reclamos.id").Find(&rec),
 			Page:    page,
 			Limit:   limit,
 			OrderBy: []string{"Reclamos.id"},
@@ -109,6 +99,9 @@ func GetReclamosByUser(c *gin.Context) {
 	var rec []Models.Reclamo
 	var r Models.Reclamo
 	params, ok := c.Request.URL.Query()["userId"]
+	propId := c.Query("propId") 
+//	groupByprop := c.Query("unidadId") 
+
 	if(!ok){
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error" : gin.H { 
@@ -135,7 +128,7 @@ func GetReclamosByUser(c *gin.Context) {
 		 limit, _ := strconv.Atoi(c.DefaultQuery("limit", "15"))
 	
 		  paginator := pagination.Paging(&pagination.Param{
-			DB:      Config.DB.Model(&rec).Preload("Comentarios").Preload("Usuario").Preload("Comentarios.Usuario").Preload("Propiedad").Select("*").Joins("inner join Usuarios on Reclamos.usuario_id = Usuarios.id").Where("Usuarios.id = ?", params).Find(&rec),
+			DB:      getQueryReclamo(&rec,params[0],propId), 
 			Page:    page,
 			Limit:   limit,
 			OrderBy: []string{"Reclamos.id"},
@@ -146,6 +139,18 @@ func GetReclamosByUser(c *gin.Context) {
 
 	}
 }
+
+func getQueryReclamo(reclamo *[]Models.Reclamo, userId string, propId string)  *gorm.DB{
+	
+	query:= Config.DB.Model(&reclamo).Preload("Comentarios").Preload("Usuario").Preload("Comentarios.Usuario").Preload("Propiedad").Select("*").Joins("inner join Usuarios on Reclamos.usuario_id = Usuarios.id").Find(&reclamo)
+ 
+	if(len(propId) > 0) {
+		return  query.Where("Usuarios.id = ? AND Reclamos.propiedad_id = ?", userId, propId)
+	} else {
+		return	query.Where("Usuarios.id = ?", userId)
+	}																																										
+}
+
 
 func UpdateReclamo(c *gin.Context) {
 	var rec Models.Reclamo
@@ -180,6 +185,9 @@ func UpdateReclamo(c *gin.Context) {
 
 func UpdateEstadoReclamo(c *gin.Context) {
 	var rec Models.Reclamo
+
+	var now = time.Now().Unix()
+	var updated = Utils.ConvertTimestampToDate(int64(now))
 	
 	if err := c.ShouldBindJSON(&rec); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -187,7 +195,7 @@ func UpdateEstadoReclamo(c *gin.Context) {
 
 	} else {
  
-	err := Models.UpdateEstadoReclamo(&rec, rec.ID, rec.Estado)
+	err := Models.UpdateEstadoReclamo(&rec, rec.ID, rec.Estado, updated)
 	   if err != nil {
 		c.JSON(http.StatusNotFound,  gin.H{
 			"error" :   gin.H { 
@@ -197,6 +205,7 @@ func UpdateEstadoReclamo(c *gin.Context) {
 		return
 	   } else {
 		c.JSON(http.StatusOK, gin.H{"status": true})
+		saveNotificationUpdateEstado(rec)
 	   }
 	  }
 	}
