@@ -46,9 +46,12 @@ func CreateReclamo(c *gin.Context) {
 
 //GetReclamoByID ... Get the claim by id
 func GetReclamoByID(c *gin.Context) {
-	id := c.Params.ByName("id")
+
 	var rec Models.Reclamo
-	err := Models.GetReclamoByID(&rec, id)
+	propId := c.Query("propId") 
+	reclamoId := c.Query("recId") 
+
+	err := Models.GetReclamoByReclamoAndPropID(&rec, reclamoId, propId)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
 			"error" : gin.H { 
@@ -57,7 +60,10 @@ func GetReclamoByID(c *gin.Context) {
 		}})
 		c.AbortWithStatus(http.StatusNotFound)
 	} else {
-		c.JSON(http.StatusOK, rec)
+		c.JSON(http.StatusOK,gin.H{
+			"data" : rec,
+			"status":  http.StatusOK,
+		})
 	}
 }
 
@@ -98,19 +104,11 @@ func GetReclamosByUser(c *gin.Context) {
 
 	var rec []Models.Reclamo
 	var r Models.Reclamo
-	params, ok := c.Request.URL.Query()["userId"]
+	userId := c.Query("userId") 
 	propId := c.Query("propId") 
 //	groupByprop := c.Query("unidadId") 
 
-	if(!ok){
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error" : gin.H { 
-			"status":  http.StatusBadRequest,
-			"message": "Invalid param",
-		}})
-		c.AbortWithStatus(http.StatusBadRequest)
-	}
-	err := Models.GetAllReclamosByUser(&rec,string(params[0]))
+	err := Models.GetAllReclamosByUser(&rec,userId)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
 			"error" : gin.H { 
@@ -128,7 +126,7 @@ func GetReclamosByUser(c *gin.Context) {
 		 limit, _ := strconv.Atoi(c.DefaultQuery("limit", "15"))
 	
 		  paginator := pagination.Paging(&pagination.Param{
-			DB:      getQueryReclamo(&rec,params[0],propId), 
+			DB:      getQueryReclamo(&rec,userId,propId), 
 			Page:    page,
 			Limit:   limit,
 			OrderBy: []string{"Reclamos.id"},
@@ -142,15 +140,18 @@ func GetReclamosByUser(c *gin.Context) {
 
 func getQueryReclamo(reclamo *[]Models.Reclamo, userId string, propId string)  *gorm.DB{
 	
+	fmt.Println("usuario",userId)
 	query:= Config.DB.Model(&reclamo).Preload("Comentarios").Preload("Usuario").Preload("Comentarios.Usuario").Preload("Propiedad").Select("*").Joins("inner join Usuarios on Reclamos.usuario_id = Usuarios.id").Find(&reclamo)
  
-	if(len(propId) > 0) {
+	if(len(propId) > 0 && userId!="0") {
 		return  query.Where("Usuarios.id = ? AND Reclamos.propiedad_id = ?", userId, propId)
 	} else {
-		return	query.Where("Usuarios.id = ?", userId)
+
+		return  query.Where("Reclamos.propiedad_id = ?", propId)
 	}																																										
 }
 
+ 
 
 func UpdateReclamo(c *gin.Context) {
 	var rec Models.Reclamo

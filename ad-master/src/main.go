@@ -19,6 +19,8 @@ import (
 //https://medium.com/remotepanda-blog/go-with-gorm-chapter-10-golang-91bc5d01c161
 var err error
 
+const PRODUCT string = "Canada"
+
 func main() {
 	 Config.DB, err = gorm.Open("mysql", Config.DbURL(Config.BuildDBConfig()))
 
@@ -43,25 +45,27 @@ func main() {
 	 Config.DB.CreateTable(&Models.Notificacion{})
 	//Config.DB.CreateTable(&Models.Foto{})
 
-	  rubros := []Models.Rubro{{Descripcion: "Electricista"},{Descripcion: "Plomero"},{Descripcion: "Gasista"}}
+	Config.DB.Delete(&Models.Rubro{})
+	  rubros := []Models.Rubro{{Id: 1,Descripcion: "Electricista"},{Id:2,Descripcion: "Plomero"},{Id:3, Descripcion: "Gasista"},{Id:4, Descripcion: "Piletero"},{Id:5, Descripcion: "Limpieza"},{Id:6, Descripcion: "Albañileria"},{Id:7, Descripcion: "Otros"}}
 	  for _, r := range rubros {
 		Config.DB.Create(&r)
 	 }
+	 Config.DB.Delete(&Models.SharedArea{})
 
-	 sharedAreas :=  []Models.SharedArea{{Descripcion:"Pileta"},{Descripcion:"Sum"},{Descripcion:"GYM"}}
-	//  for _, shared := range sharedAreas {
-	// 	Config.DB.Create(&shared)
-	//  }
+	 sharedAreas :=  []Models.SharedArea{{Id:1, Descripcion:"General", Image:"https://images.unsplash.com/photo-1527232165582-78c982a1cad1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1000&q=80"},{Id:2, Descripcion:"Pileta", Image:"https://images.unsplash.com/photo-1585077017412-1b54a783b8ac?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80"},{Id:3, Descripcion:"SUM",Image:"https://images.unsplash.com/photo-1531973968078-9bb02785f13d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=677&q=80"},{Id:4, Descripcion:"GYM", Image:"https://images.unsplash.com/photo-1578874691223-64558a3ca096?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=375&q=80"},{Id:5, Descripcion:"CINE",Image:"https://images.unsplash.com/photo-1581250586548-0b44aeac2ad5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80"}}
+	 sharedAreas2 :=  []Models.SharedArea{{Id:1, Descripcion:"General", Image:"https://images.unsplash.com/photo-1527232165582-78c982a1cad1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1000&q=80"},{Id:2, Descripcion:"Pileta", Image:"https://images.unsplash.com/photo-1585077017412-1b54a783b8ac?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80"},{Id:3, Descripcion:"SUM",Image:"https://images.unsplash.com/photo-1531973968078-9bb02785f13d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=677&q=80"},{Id:4, Descripcion:"GYM", Image:"https://images.unsplash.com/photo-1578874691223-64558a3ca096?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=375&q=80"}}
+	 sharedAreas3 :=  []Models.SharedArea{{Id:1, Descripcion:"General", Image:"https://images.unsplash.com/photo-1527232165582-78c982a1cad1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1000&q=80"},{Id:2, Descripcion:"Pileta", Image:"https://images.unsplash.com/photo-1585077017412-1b54a783b8ac?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80"},{Id:3, Descripcion:"SUM",Image:"https://images.unsplash.com/photo-1531973968078-9bb02785f13d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=677&q=80"}}
+	 sharedAreas4 :=  []Models.SharedArea{{Id:1, Descripcion:"General", Image:"https://images.unsplash.com/photo-1527232165582-78c982a1cad1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1000&q=80"},{Id:2, Descripcion:"Pileta", Image:"https://images.unsplash.com/photo-1585077017412-1b54a783b8ac?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80"},{Id:3, Descripcion:"SUM",Image:"https://images.unsplash.com/photo-1531973968078-9bb02785f13d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=677&q=80"}}
 
-	 propiedades := []Models.Propiedad{{Direccion:"Av libertador 101",Nombre:"Al Rio", Localidad:"Vicente Lopez", Provincia:"Buenos Aires", Image: "https://media.gettyimages.com/photos/modern-condominiums-picture-id952954132?s=2048x2048" ,Lat:-34.563957, Lon:-58.4383696,SharedAreas:sharedAreas},
+
+	 for _, s := range sharedAreas {
+		Config.DB.Create(&s)
+	 }
+
+	 propiedades := []Models.Propiedad{{Direccion:"Av libertador 101",Nombre:"Al Rio", Localidad:"Vicente Lopez", Provincia:"Buenos Aires", Image: "https://media.gettyimages.com/photos/modern-condominiums-picture-id952954132?s=2048x2048" ,Lat:-34.563957, Lon:-58.4383696, SharedAreas:sharedAreas2},
 	 {Direccion:"Av Libertador 7050",Nombre:"Chateau libertador 2", Localidad:"CABA", Provincia:"Buenos Aires",Image: "https://images.unsplash.com/photo-1589095093845-93a387ebc7ee?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80" ,Lat:-34.563957, Lon:-58.4383696,SharedAreas:sharedAreas},
-	 {Direccion:"Av Figueroa Alcorta 3600",Nombre:"Le Parc", Localidad:"CABA", Provincia:"Buenos Aires", Image: "https://lh3.googleusercontent.com/proxy/6MG-osqJE_roLB90JhBkuike-jqixSx4qvLuMUhAZuNY2vL7-MkOYzUBfnIlCsn1mEjQGYmVkIg9lJShfvky3uS1xjTphhfdGCxYO3zLFXOsIFFP2Q3qREjNn0PXVL_cQkU4WipcLjGfbJ9a5G7q" ,Lat:-34.563957, Lon:-58.4383696},
-	 {Direccion:"Azucena Villaflor 559",Nombre:"Edificio Alvear", Localidad:"Puerto Madero", Provincia:"Buenos Aires", Image: "https://images.unsplash.com/photo-1535010827831-0f324b6f6908?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=321&q=80" ,Lat:-34.563957, Lon:-58.4383696},
-	 {Direccion:"Azucena Villaflor 559",Nombre:"Edificio Alvear", Localidad:"Puerto Madero", Provincia:"Buenos Aires", Image: "https://images.unsplash.com/photo-1535010827831-0f324b6f6908?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=321&q=80" ,Lat:-34.563957, Lon:-58.4383696},
-	 {Direccion:"Azucena Villaflor 559",Nombre:"Edificio Alvear", Localidad:"Puerto Madero", Provincia:"Buenos Aires", Image: "https://images.unsplash.com/photo-1535010827831-0f324b6f6908?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=321&q=80" ,Lat:-34.563957, Lon:-58.4383696},
-	 {Direccion:"Azucena Villaflor 559",Nombre:"Edificio Alvear", Localidad:"Puerto Madero", Provincia:"Buenos Aires", Image: "https://images.unsplash.com/photo-1535010827831-0f324b6f6908?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=321&q=80" ,Lat:-34.563957, Lon:-58.4383696},
-	 {Direccion:"Azucena Villaflor 559",Nombre:"Edificio Alvear", Localidad:"Puerto Madero", Provincia:"Buenos Aires", Image: "https://images.unsplash.com/photo-1535010827831-0f324b6f6908?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=321&q=80" ,Lat:-34.563957, Lon:-58.4383696},
-	 {Direccion:"Azucena Villaflor 559",Nombre:"Edificio Alvear", Localidad:"Puerto Madero", Provincia:"Buenos Aires", Image: "https://images.unsplash.com/photo-1535010827831-0f324b6f6908?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=321&q=80" ,Lat:-34.563957, Lon:-58.4383696}}
+	 {Direccion:"Av Figueroa Alcorta 3600",Nombre:"Le Parc", Localidad:"CABA", Provincia:"Buenos Aires", Image: "https://images.unsplash.com/photo-1535010827831-0f324b6f6908?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=321&q=80" ,Lat:-34.563957, Lon:-58.4383696, SharedAreas:sharedAreas3},
+	 {Direccion:"Azucena Villaflor 559",Nombre:"Edificio Alvear", Localidad:"Puerto Madero", Provincia:"Buenos Aires", Image: "https://images.unsplash.com/photo-1535010827831-0f324b6f6908?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=321&q=80" ,Lat:-34.563957, Lon:-58.4383696,  SharedAreas:sharedAreas4}}
 	 
 	 
 	 
@@ -79,8 +83,6 @@ func main() {
 	 Config.DB.Table("SharedReclamo").AddForeignKey("shared_area_id", "Shared(id)", "CASCADE", "CASCADE")
 
 
-
-	 fmt.Println("Status:", propiedades[0].Nombre)
 	 unidades := []Models.Unidad{{Piso:1, Depto:"A", PropiedadId:1},{Piso:1, Depto:"B",PropiedadId:1},{Piso:5, Depto:"C",PropiedadId:1},
 	                            {Piso:2, Depto:"A", PropiedadId:1},{Piso:2, Depto:"B",PropiedadId:1},{Piso:2, Depto:"C",PropiedadId:1},
 								{Piso:3, Depto:"A", PropiedadId:1},{Piso:3, Depto:"B",PropiedadId:1},{Piso:3, Depto:"C",PropiedadId:1},
@@ -92,7 +94,10 @@ func main() {
 								{Piso:1, Depto:"A", PropiedadId:3},{Piso:1, Depto:"B",PropiedadId:3},{Piso:5, Depto:"C",PropiedadId:3},
 	                            {Piso:2, Depto:"A", PropiedadId:3},{Piso:2, Depto:"B",PropiedadId:3},{Piso:2, Depto:"C",PropiedadId:3},
 								{Piso:3, Depto:"A", PropiedadId:3},{Piso:3, Depto:"B",PropiedadId:3},{Piso:3, Depto:"C",PropiedadId:3},
-								{Piso:4, Depto:"A", PropiedadId:3},{Piso:4, Depto:"B",PropiedadId:3},{Piso:4, Depto:"C",PropiedadId:3}}
+								{Piso:4, Depto:"A", PropiedadId:3},{Piso:4, Depto:"B",PropiedadId:3},{Piso:4, Depto:"C",PropiedadId:3},
+								{Piso:1, Depto:"A", PropiedadId:4},{Piso:1, Depto:"B",PropiedadId:4},{Piso:5, Depto:"C",PropiedadId:4},
+	                            {Piso:2, Depto:"A", PropiedadId:4},{Piso:2, Depto:"B",PropiedadId:4},{Piso:2, Depto:"C",PropiedadId:4},
+								{Piso:3, Depto:"A", PropiedadId:4},{Piso:3, Depto:"B",PropiedadId:4},{Piso:3, Depto:"C",PropiedadId:4}}
 
 	 for _, u := range unidades {
 		Config.DB.Create(&u)

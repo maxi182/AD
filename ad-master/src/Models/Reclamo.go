@@ -6,9 +6,17 @@ import (
 	//http://gorm.io/es_ES/docs/query.html
 )
 
-//GetReclamosByID ... Fetch only one propiedad by Id
+//GetReclamosByID
 func GetReclamoByID(reclamo *Reclamo, id string) (err error) {
 	if err = Config.DB.Where("id = ?", id).Find(reclamo).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+//GetReclamosByPropAndReclamoID 
+func GetReclamoByReclamoAndPropID(reclamo *Reclamo, id string, propId string) (err error) {
+	if err = Config.DB.Where("id = ? AND propiedad_id= ? ", id, propId).Preload("Usuario").Find(reclamo).Error; err != nil {
 		return err
 	}
 	return nil

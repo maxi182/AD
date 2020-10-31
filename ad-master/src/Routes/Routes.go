@@ -35,11 +35,22 @@ func SetupRouter() *gin.Engine {
 		reclamos_route.GET("reclamos/all", Controllers.GetReclamos)
 		reclamos_route.GET("reclamos", Controllers.GetReclamosByUser)
 		reclamos_route.PUT("reclamo/:id", Controllers.UpdateReclamo)
+		reclamos_route.GET("reclamo", Controllers.GetReclamoByID)
 		reclamos_route.PUT("estado", Controllers.UpdateEstadoReclamo)
 	}
 	notification_route := r.Group("/notification-api")
 	{
 		notification_route.GET("notifications", Controllers.GetNotificationsByUser)
+	}
+
+	rubros_route := r.Group("/rubros-api")
+	{
+		rubros_route.GET("rubros", Controllers.GetAllRubros)
+	}
+
+	shared_route := r.Group("/propiedades-api")
+	{
+		shared_route.GET("shared", Controllers.GetAllshared)
 	}
 
 	return r

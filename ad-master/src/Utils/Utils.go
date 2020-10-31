@@ -59,6 +59,9 @@ func CheckPasswordHash(password, hash string) bool {
     return err == nil
 }
 
+func GetAuthToken() string {
+	return "Bearer ZG1Xc0NvbnN1bWVyOlY2eHNQVDJFVnBKWlc4dA=="
+}
 
 var seededRand *rand.Rand = rand.New(
   rand.NewSource(time.Now().UnixNano()))

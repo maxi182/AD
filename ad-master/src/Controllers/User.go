@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"log"
 	"time"
+
 	"gopkg.in/validator.v2"
 	"net/http" //https://golang.org/pkg/net/http/
  	"github.com/biezhi/gorm-paginator/pagination"
@@ -52,17 +53,24 @@ func GetUsers(c *gin.Context) {
 func CreateUser(c *gin.Context) {
 	var user Models.User
 	c.BindJSON(&user)
-	//var rubro []Models.Rubro
-	//rubro = user.Rubros
-	
-	var now = time.Now().Unix()
 
+	auth := c.Request.Header.Get("Authorization")
+    if auth !=  Utils.GetAuthToken() {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"error" : gin.H { 
+			"status":  http.StatusUnauthorized,
+			"message": "Invalid Token",
+		}})
+		c.Abort()
+		return
+	}
+	var now = time.Now().Unix()
 	nur := Models.User(user)
 	 err_password := validator.Validate(nur)
 	 if err_password != nil {
 		c.JSON(http.StatusNotFound, gin.H{
 			"error" : gin.H { 
-			"status":  400,
+			"status":  http.StatusNotFound,
 			"message": err_password.Error(),
 		}})
 		fmt.Println(err_password.Error())
@@ -76,7 +84,7 @@ func CreateUser(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
 			"error" : gin.H { 
-			"status":  400,
+			"status":  http.StatusNotFound,
 			"message": err.Error(),
 		}})
 		fmt.Println(err.Error())
@@ -84,13 +92,6 @@ func CreateUser(c *gin.Context) {
 	} else {
 		c.JSON(http.StatusOK, user)
 		fmt.Println("usuario_creado", user.Id)
- 
-		// 	if(rubro !=nil && len(rubro)>0) {
-		// 		for i := 0; i < len(rubro); i++ {
-		// 			rubro[i].Id_usuario = user.Id
-		// 			Models.CreateRubro(&rubro[i])
-		// 		}
-		// }
 	}
 }
 
@@ -161,8 +162,17 @@ func DeleteUser(c *gin.Context) {
 func LoginUser(c *gin.Context) {
 	var user Models.User
 	var dbuser Models.User
-	 uid := c.Params.ByName("name")
-	 fmt.Println("name", uid)
+ 
+	auth := c.Request.Header.Get("Authorization")
+    if auth !=  Utils.GetAuthToken() {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"error" : gin.H { 
+			"status":  http.StatusUnauthorized,
+			"message": "Invalid Token",
+		}})
+		c.Abort()
+		return
+	}
 
 	 	if err := c.ShouldBindJSON(&user); err != nil {
  		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
