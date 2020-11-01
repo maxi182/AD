@@ -18,12 +18,12 @@ func EncodeBase64(input string) string {
 	return sEnc
 }
 
-func DecodeBase64(input string) string {
+func DecodeBase64(input string) []byte {
 
     sDec, _ := b64.StdEncoding.DecodeString(input)
     fmt.Println(string(sDec))
     fmt.Println()
-	return string(sDec)
+	return sDec
 }
 
 func SendEmail(body string, receiver string) {

@@ -11,6 +11,8 @@ type Foto struct {
 	ComentarioId	uint 	  `json:"comentario_id"` 
 	Fecha 			time.Time `json:"fecha"`
 	Uri    			string    `json:"uri"`
+	Data			string    `json:"data"`
+	Filename		string    `json:"filename"`
 }
 
 func (b *Foto) TableName() string {
