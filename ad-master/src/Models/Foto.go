@@ -19,7 +19,7 @@ func GetAllFotosByComentario(foto *[]Foto, comentarioId string) (err error) {
 	return nil
 }
 
-func UploadFotos(fotos *[]Foto) (err error) {
+func UploadFotos(fotos *[]FotoUpload) (err error) {
 	//c, err := ftp.Dial("190.55.95.131:3307", ftp.DialWithTimeout(5*time.Second))
 	c, err := ftp.Dial("190.55.95.131:21", ftp.DialWithTimeout(5*time.Second))
 	if err != nil {

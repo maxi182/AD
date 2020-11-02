@@ -8,7 +8,7 @@ import (
  )
 
 func UploadFotos(c *gin.Context) {
-	var fotos []Models.Foto
+	var fotos []Models.FotoUpload
 	c.BindJSON(&fotos)
 
  	err := Models.UploadFotos(&fotos)

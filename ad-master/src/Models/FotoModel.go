@@ -11,6 +11,10 @@ type Foto struct {
 	ComentarioId	uint 	  `json:"comentario_id"` 
 	Fecha 			time.Time `json:"fecha"`
 	Uri    			string    `json:"uri"`
+	Filename		string    `json:"filename"`
+}
+
+type FotoUpload struct {
 	Data			string    `json:"data"`
 	Filename		string    `json:"filename"`
 }
