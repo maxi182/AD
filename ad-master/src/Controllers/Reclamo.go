@@ -34,6 +34,7 @@ func CreateReclamo(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"data" :  gin.H{
 				"reclamo_id" : rec.ID,
+				"comentario" : rec.Comentarios,
 				"user_id" : rec.UsuarioId,
 				"estado":  rec.Estado,
 			},

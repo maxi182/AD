@@ -37,6 +37,8 @@ func SetupRouter() *gin.Engine {
 		reclamos_route.PUT("reclamo/:id", Controllers.UpdateReclamo)
 		reclamos_route.GET("reclamo", Controllers.GetReclamoByID)
 		reclamos_route.PUT("estado", Controllers.UpdateEstadoReclamo)
+
+		reclamos_route.POST("fotos", Controllers.UploadFotos)
 	}
 	notification_route := r.Group("/notification-api")
 	{

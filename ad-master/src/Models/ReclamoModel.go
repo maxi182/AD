@@ -16,7 +16,8 @@ type Reclamo struct {
 	PropiedadId     uint            `json:"propiedad_id"`
 	RubroId         uint            `json:"rubro_id"`
 	Propiedad 	    Propiedad       `json:"propiedad"`
-	SharedAreas     []SharedArea	`gorm:"many2many:SharedReclamo" json:"shared"`
+	SharedAreaId    uint		    `json:"area_id"`
+	SharedAreas     SharedArea      `gorm:"foreignKey:SharedAreaId" json:"shared"`  					//	`gorm:"many2many:SharedReclamo" json:"shared"`
 }
 
 func (b *Reclamo) TableName() string {
