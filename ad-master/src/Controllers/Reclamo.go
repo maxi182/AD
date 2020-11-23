@@ -141,6 +141,31 @@ func GetReclamosByUser(c *gin.Context) {
 	}
 }
 
+func GetReclamosByPropiedadEstado(c *gin.Context) {
+
+	var rec []Models.Reclamo
+	//var r Models.Reclamo
+	recStatus := c.Query("recStatus")
+	recId := c.Query("recId")
+	propId := c.Query("propId")
+
+
+	err := Models.GetAllReclamosByPropiedadEstado(&rec, recStatus, recId, propId)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"error": gin.H{
+				"status":  http.StatusNotFound,
+				"message": err.Error(),
+			}})
+		c.AbortWithStatus(http.StatusNotFound)
+	} else {
+		c.JSON(http.StatusOK, gin.H{
+			"data":   rec,
+			"status": http.StatusOK,
+		})
+	}
+}
+
 func getQueryReclamo(reclamo *[]Models.Reclamo, userId string, propId string) *gorm.DB {
 
 	fmt.Println("usuario", userId)
