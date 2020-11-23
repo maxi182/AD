@@ -34,3 +34,58 @@ func CreateComentario(c *gin.Context) {
 		fmt.Println("comentario_creado", coment.Id)
 	}
 }
+
+type comStatus struct {
+	ComentarioID uint
+	Failed    bool
+	Error     error
+}
+
+func CreateComentarios(c *gin.Context) {
+	var comentarios []Models.Comentario
+	
+	var now = time.Now().Unix()
+
+	var statusComentarios []comStatus
+	hayError := false
+
+	if err := c.ShouldBindJSON(&comentarios); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	for i := 0; i < len(comentarios); i++ {
+
+		comentario := (comentarios)[i]
+		comentario.Date_created = Utils.ConvertTimestampToDate(int64(now))
+
+		err := Models.CreateComentario(&comentario)
+
+		statusError := false
+
+		if err != nil {
+			statusError = true
+			hayError = true
+		}
+
+		status := comStatus{ComentarioID: comentario.Id, Error: err, Failed: statusError}
+		statusComentarios = append(statusComentarios, status)
+
+		
+	}
+
+	if hayError {
+		c.JSON(http.StatusNotFound, gin.H{
+			"reclamos": statusComentarios,
+			"error": gin.H{
+				"status":  400,
+				"message": "La creación de comentarios tiene errores",
+			}})
+		c.AbortWithStatus(http.StatusNotFound)
+	} else {
+		c.JSON(http.StatusOK, gin.H{
+			"reclamos": statusComentarios,
+			"status": http.StatusOK,
+		})
+	}
+}

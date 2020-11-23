@@ -32,6 +32,7 @@ func SetupRouter() *gin.Engine {
 	{
 		reclamos_route.POST("reclamos", Controllers.CreateReclamo)
 		reclamos_route.POST("comentario", Controllers.CreateComentario)
+		reclamos_route.POST("comentarios", Controllers.CreateComentarios)
 		reclamos_route.GET("reclamos/all", Controllers.GetReclamos)
 		reclamos_route.GET("reclamos", Controllers.GetReclamosByUser)
 		reclamos_route.PUT("reclamo/:id", Controllers.UpdateReclamo)
