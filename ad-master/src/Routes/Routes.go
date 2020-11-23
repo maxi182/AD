@@ -40,6 +40,7 @@ func SetupRouter() *gin.Engine {
 		reclamos_route.PUT("estado", Controllers.UpdateEstadoReclamo)
 		reclamos_route.PUT("estados", Controllers.UpdateEstadoReclamos)
 		reclamos_route.GET("estado", Controllers.GetReclamosByPropiedadEstado)
+		reclamos_route.PUT("estado/fecha", Controllers.UpdateRepairDateReclamo)
 
 		reclamos_route.POST("fotos", Controllers.UploadFotos)
 	}

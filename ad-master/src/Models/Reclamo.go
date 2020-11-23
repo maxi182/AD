@@ -64,6 +64,14 @@ func UpdateEstadoReclamo(reclamo *Reclamo, reclamoId uint, estado uint, updated 
 	return nil
 }
 
+func UpdateRepairDateReclamo(reclamo *Reclamo, reclamoId uint, dateRepair string, updated string) (err error) {
+
+	if err = Config.DB.Model(reclamo).Where("ID = ?", reclamoId).Find(reclamo).Updates(map[string]interface{}{"date_repair": dateRepair, "date_updated":updated}).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
 func CreateReclamo(reclamo *Reclamo) (err error) { 
 
 	

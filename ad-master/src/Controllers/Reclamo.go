@@ -295,3 +295,30 @@ func UpdateEstadoReclamos(c *gin.Context) {
 		})
 	}
 }
+
+func UpdateRepairDateReclamo(c *gin.Context) {
+	var rec Models.Reclamo
+
+	var now = time.Now().Unix()
+	var updated = Utils.ConvertTimestampToDate(int64(now))
+
+	if err := c.ShouldBindJSON(&rec); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+
+	} else {
+
+		err := Models.UpdateRepairDateReclamo(&rec, rec.ID, rec.Date_repair, updated)
+		if err != nil {
+			c.JSON(http.StatusNotFound, gin.H{
+				"error": gin.H{
+					"status":  http.StatusNotFound,
+					"message": "Not Found",
+				}})
+			return
+		} else {
+			c.JSON(http.StatusOK, gin.H{"status": true})
+		}
+	}
+}
+
