@@ -11,7 +11,7 @@ type Comentario struct {
 	Texto    		string    `json:"texto"`
 	UsuarioId       uint      `json:"usuario_id"`
 	Usuario			User	  `gorm:"foreignKey:UsuarioId" json:"usuario"`  
-	Fotos  			[]Foto    `gorm:"foreignKey:foto_id" json:"fotos"`        //`gorm:"many2many:PropiedadUnidad" json:"unidades"`
+	Fotos  			[]Foto    `gorm:"foreignKey:ComentarioId" json:"fotos"`        //`gorm:"many2many:PropiedadUnidad" json:"unidades"`
 }
 
 func (b *Comentario) TableName() string {

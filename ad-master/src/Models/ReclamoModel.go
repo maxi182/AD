@@ -8,11 +8,13 @@ type Reclamo struct {
 	ID        		uint      		`gorm:"primary_key;auto_increment" json:"reclamo_id"` 
 	Date_created    string          `json:"date_created"`
 	Date_updated    string          `json:"date_updated"`
+	Date_repair     string          `json:"date_repair"`
 	Estado    		uint    		`json:"estado"`
 	UsuarioId		uint 			`json:"usuario_id"`
 	Usuario			User 			`gorm:"foreignKey:UsuarioId" json:"creator"`  
 	Comentarios  	[]Comentario   	`json:"comentarios"`        //`gorm:"many2many:PropiedadUnidad" json:"unidades"`
 	UnidadId		uint			`json:"unidad_id"`
+	Unidad			Unidad          `json:"unidad"`
 	PropiedadId     uint            `json:"propiedad_id"`
 	RubroId         uint            `json:"rubro_id"`
 	Propiedad 	    Propiedad       `json:"propiedad"`

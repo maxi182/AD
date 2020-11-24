@@ -29,12 +29,22 @@ func UploadFoto(foto *FotoUpload) (err error) {
 		return err
 	}
 
-	
 	fotoBytes := Utils.DecodeBase64(strings.ReplaceAll(foto.Data, "data:image/jpeg;base64,", ""))
+
 	data := bytes.NewBuffer(fotoBytes)
 	err = c.Stor(foto.Filename, data)
 
 	if err != nil {
+		return err
+	}
+	var now = time.Now().Unix()
+	var fotoDb Foto
+	fotoDb.ComentarioId = foto.ComentarioId
+	fotoDb.Fecha = Utils.ConvertTimestampToDate(int64(now))
+	fotoDb.Uri = "https://cerfoglio.com/reclamos/" + foto.Filename
+	fotoDb.Filename = foto.Filename
+
+	if err = Config.DB.Create(&fotoDb).Error; err != nil {
 		return err
 	}
 

@@ -37,7 +37,7 @@ func GetNotificationsByUser(c *gin.Context) {
 	 
 		fmt.Println(c.Request.URL.Query())
 		 page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
-		 limit, _ := strconv.Atoi(c.DefaultQuery("limit", "15"))
+		 limit, _ := strconv.Atoi(c.DefaultQuery("limit", "100"))
 	
 		  paginator := pagination.Paging(&pagination.Param{
 			DB:      Config.DB.Model(&notificacion).Preload("Usuario").Select("*").Where("Notificaciones.usuario_id = ?", params).Find(&notificacion),

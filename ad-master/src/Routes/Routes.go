@@ -32,13 +32,17 @@ func SetupRouter() *gin.Engine {
 	{
 		reclamos_route.POST("reclamos", Controllers.CreateReclamo)
 		reclamos_route.POST("comentario", Controllers.CreateComentario)
+		reclamos_route.POST("comentarios", Controllers.CreateComentarios)
 		reclamos_route.GET("reclamos/all", Controllers.GetReclamos)
 		reclamos_route.GET("reclamos", Controllers.GetReclamosByUser)
 		reclamos_route.PUT("reclamo/:id", Controllers.UpdateReclamo)
 		reclamos_route.GET("reclamo", Controllers.GetReclamoByID)
 		reclamos_route.PUT("estado", Controllers.UpdateEstadoReclamo)
-
+		reclamos_route.PUT("estados", Controllers.UpdateEstadoReclamos)
 		reclamos_route.POST("fotos", Controllers.UploadFotos)
+		reclamos_route.PUT("estado/fecha", Controllers.UpdateRepairDateReclamo)
+		reclamos_route.GET("estado", Controllers.GetReclamosByPropiedadEstado)
+
 	}
 	notification_route := r.Group("/notification-api")
 	{

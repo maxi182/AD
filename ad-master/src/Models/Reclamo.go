@@ -35,7 +35,7 @@ return nil
 //GetAllReclamosByUser Fetch all propiedad data
 func GetAllReclamosByUser(reclamo *[]Reclamo, userId string) (err error) {
 	
-  if err = Config.DB.Model(&Reclamo{}).Preload("Comentarios").Preload("Usuario").Preload("Comentarios.Usuario").Preload("Propiedad").Select("*").Joins("inner join Usuarios on Reclamos.usuario_id = Usuarios.id").Where("Usuarios.id = ?", userId).Find(&reclamo).Error; err != nil {
+  if err = Config.DB.Model(&Reclamo{}).Preload("Comentarios").Preload("Usuario").Preload("Comentarios.Usuario").Preload("Comentarios.Fotos").Preload("Propiedad").Select("*").Joins("inner join Usuarios on Reclamos.usuario_id = Usuarios.id").Where("Usuarios.id = ?", userId).Find(&reclamo).Error; err != nil {
 	   	return err
 	  }
   return nil
@@ -54,6 +54,22 @@ func UpdateEstadoReclamo(reclamo *Reclamo, reclamoId uint, estado uint, updated 
 	}
 	return nil
 }
+
+func UpdateRepairDateReclamo(reclamo *Reclamo, reclamoId uint, dateRepair string, updated string) (err error) {
+
+	if err = Config.DB.Model(reclamo).Where("ID = ?", reclamoId).Find(reclamo).Updates(map[string]interface{}{"date_repair": dateRepair, "date_updated":updated}).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+func GetAllReclamosByPropiedadEstado(reclamo *[]Reclamo, recStatus string, recId string, propId string) (err error) {
+	
+	if err = Config.DB.Model(&Reclamo{}).Preload("Comentarios").Preload("Usuario").Preload("Comentarios.Usuario").Preload("Propiedad").Select("*").Where("estado = ? AND propiedad_id = ? AND id != ?", recStatus, propId, recId).Find(&reclamo).Error; err != nil {
+			 return err
+		}
+	return nil
+  }
 
 func CreateReclamo(reclamo *Reclamo) (err error) { 
 

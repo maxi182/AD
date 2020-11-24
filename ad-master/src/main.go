@@ -43,7 +43,7 @@ func main() {
 	 Config.DB.CreateTable(&Models.Reclamo{})
 	 Config.DB.CreateTable(&Models.Comentario{})
 	 Config.DB.CreateTable(&Models.Notificacion{})
-	//Config.DB.CreateTable(&Models.Foto{})
+	 Config.DB.CreateTable(&Models.Foto{})
 
 	Config.DB.Delete(&Models.Rubro{})
 	  rubros := []Models.Rubro{{Id: 1,Descripcion: "Electricista"},{Id:2,Descripcion: "Plomero"},{Id:3, Descripcion: "Gasista"},{Id:4, Descripcion: "Piletero"},{Id:5, Descripcion: "Limpieza"},{Id:6, Descripcion: "Albañileria"},{Id:7, Descripcion: "Otros"}}

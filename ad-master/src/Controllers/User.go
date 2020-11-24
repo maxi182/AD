@@ -199,7 +199,11 @@ func LoginUser(c *gin.Context) {
 				"status":  http.StatusOK,
 			})
 		} else {
-			c.JSON(http.StatusOK, gin.H{"status": "user inactive"})
+			c.JSON(http.StatusNotFound,  gin.H{
+				"error" : gin.H { 
+				"status":  http.StatusUnauthorized,
+				"message": "User blocked",
+			}})
 		}
 	}else{
 		c.JSON(http.StatusNotFound,  gin.H{
