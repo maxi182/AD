@@ -322,3 +322,27 @@ func UpdateRepairDateReclamo(c *gin.Context) {
 	}
 }
 
+func GetCantReclamosByUser(c *gin.Context) {
+
+	var rec []Models.Reclamo
+	userId := c.Query("userId")
+
+
+	err := Models.GetAllReclamosByUser(&rec, userId)
+
+	cantRec := len(rec)
+
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"error": gin.H{
+				"status":  http.StatusNotFound,
+				"message": err.Error(),
+			}})
+		c.AbortWithStatus(http.StatusNotFound)
+	} else {
+		c.JSON(http.StatusOK, gin.H{
+			"data":   cantRec,
+			"status": http.StatusOK,
+		})
+	}
+}
