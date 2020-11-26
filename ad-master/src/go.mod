@@ -16,6 +16,7 @@ require (
 	github.com/qor/validations v0.0.0-20171228122639-f364bca61b46
 	golang.org/x/crypto v0.0.0-20191205180655-e7c4368fe9dd
 	google.golang.org/appengine v1.4.0 // indirect
+	gopkg.in/robfig/cron.v2 v2.0.0-20150107220207-be2e0b0deed5
 	gopkg.in/validator.v2 v2.0.0-20200605151824-2b28d334fa05
 	gorm.io/gorm v1.20.5 // indirect
 )

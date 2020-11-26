@@ -149,7 +149,6 @@ func GetReclamosByPropiedadEstado(c *gin.Context) {
 	recId := c.Query("recId")
 	propId := c.Query("propId")
 
-
 	err := Models.GetAllReclamosByPropiedadEstado(&rec, recStatus, recId, propId)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
@@ -265,19 +264,18 @@ func UpdateEstadoReclamos(c *gin.Context) {
 
 		err := Models.UpdateEstadoReclamo(&reclamo, reclamo.ID, reclamo.Estado, updated)
 
-			statusError := false
+		statusError := false
 
-			if err != nil {
-				statusError = true
-				hayError = true
-			}else{
-				saveNotificationUpdateEstado(reclamo)
-			}
+		if err != nil {
+			statusError = true
+			hayError = true
+		} else {
+			saveNotificationUpdateEstado(reclamo)
+		}
 
-			status := recStatus{ReclamoID: reclamo.ID, Error: err, Failed: statusError}
-			statusReclamos = append(statusReclamos, status)
+		status := recStatus{ReclamoID: reclamo.ID, Error: err, Failed: statusError}
+		statusReclamos = append(statusReclamos, status)
 
-		
 	}
 
 	if hayError {
@@ -291,7 +289,7 @@ func UpdateEstadoReclamos(c *gin.Context) {
 	} else {
 		c.JSON(http.StatusOK, gin.H{
 			"reclamos": statusReclamos,
-			"status": http.StatusOK,
+			"status":   http.StatusOK,
 		})
 	}
 }
@@ -327,7 +325,6 @@ func GetCantReclamosByUser(c *gin.Context) {
 	var rec []Models.Reclamo
 	userId := c.Query("userId")
 
-
 	err := Models.GetAllReclamosByUser(&rec, userId)
 
 	cantRec := len(rec)
@@ -344,5 +341,43 @@ func GetCantReclamosByUser(c *gin.Context) {
 			"data":   cantRec,
 			"status": http.StatusOK,
 		})
+	}
+}
+
+func RevisarReclamosVencidos() {
+	fmt.Println("Reviso reclamos vencidos")
+
+	var now = time.Now()
+	var vencimiento = now.AddDate(0, 0, -1)
+
+	var nowStamp = time.Now().Unix()
+	var updated = Utils.ConvertTimestampToDate(int64(nowStamp))
+
+	var rec []Models.Reclamo
+	err := Models.GetAllReclamosInspeccionados(&rec)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	if len(rec) == 0 {
+		fmt.Println("No hay reclamos vencidos")
+	}
+
+	for i := 0; i < len(rec); i++ {
+		parseTime, _ := time.Parse("2006-01-02 15:04:05", rec[i].Date_updated)
+
+		if parseTime.Before(vencimiento) {
+			fmt.Println("Reclamo ", rec[i].ID, " vencido")
+
+			err := Models.UpdateEstadoReclamo(&rec[i], rec[i].ID, 4, updated)
+
+			if err != nil {
+				fmt.Println("Error: ", err)
+			} else {
+				fmt.Println("Reclamo ", rec[i].ID, " modificado a Rechazado")
+				saveNotificationUpdateEstado(rec[i])
+			}
+		}
 	}
 }

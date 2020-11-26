@@ -50,6 +50,15 @@ func GetAllReclamosByPropiedadEstado(reclamo *[]Reclamo, recStatus string, recId
 	return nil
   }
 
+  //GetAllReclamosByUser Fetch all propiedad data
+func GetAllReclamosInspeccionados(reclamo *[]Reclamo) (err error) {
+	
+	if err = Config.DB.Model(&Reclamo{}).Preload("Comentarios").Preload("Usuario").Preload("Comentarios.Usuario").Preload("Propiedad").Select("*").Where("estado = ?", 1).Find(&reclamo).Error; err != nil {
+			 return err
+		}
+	return nil
+  }
+
 //UpdateUser ... Update user
 func UpdateReclamo(reclamo *Reclamo, id string) (err error) {
 	Config.DB.Save(&reclamo)

@@ -1,11 +1,12 @@
 package main
 
 import (
+	"first-api/Controllers"
 	"first-api/Config"
 	"first-api/Models"
 	"first-api/Routes"
 	"fmt"
- 
+	"gopkg.in/robfig/cron.v2"
 
 	"github.com/qor/validations"
 	"github.com/jinzhu/gorm"
@@ -111,6 +112,14 @@ func main() {
 	// 	Config.DB.Omit("Rubros","Propiedades").Create(&usr)
 	
 	// 	}
+
+	c := cron.New()
+	c.AddFunc("@every 0h0m10s", func() { 
+		
+		Controllers.RevisarReclamosVencidos()
+
+	})
+	c.Start()
 			
 	r := Routes.SetupRouter()
 	//running
